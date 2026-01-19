@@ -8,47 +8,19 @@
 </head>
 <body>
 
-<!-- TOP BAR -->
-<div class="topbar">
-  <span id="pickupDisplay"></span>
-</div>
+<h1>🍞 Brotify</h1>
+<p>Gemeinsames Sonntagsfrühstück planen</p>
 
-<!-- ABHOLER -->
-<div id="pickupBox">
-  <input id="pickupInput" placeholder="👤🚗 Wer holt die Bestellung ab?">
-  <button id="savePickupBtn">Abholer speichern</button>
-</div>
+<input id="family" placeholder="Familienname">
 
-<!-- SWITCH -->
-<div class="switch">
-  <button id="orderBtn">🏠 Bestellen</button>
-  <button id="bakerBtn">🧺 Bäcker</button>
-</div>
+<div id="products"></div>
 
-<!-- BESTELLEN -->
-<div id="orderView">
-  <h1>🍞 Brotify</h1>
+<button id="saveBtn">🛒 Bestellung speichern</button>
 
-  <input id="familyInput" placeholder="Familienname">
+<hr>
 
-  <div id="iconPicker"></div>
-
-  <textarea id="noteInput" placeholder="Bemerkung"></textarea>
-
-  <div id="products"></div>
-
-  <button id="saveOrderBtn">🛒 Bestellung speichern</button>
-
-  <hr>
-  <div id="overview"></div>
-</div>
-
-<!-- BÄCKER -->
-<div id="bakerView" style="display:none">
-  <h2>🧺 Bäcker-Übersicht</h2>
-  <p id="pickupBaker"></p>
-  <div id="bakerList"></div>
-</div>
+<h2>📋 Bestellungen</h2>
+<div id="overview"></div>
 
 <!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
