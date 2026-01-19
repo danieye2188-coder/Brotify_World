@@ -16,13 +16,12 @@ body > *:not(.header-moon) {
   border-radius: 12px;
 }
 
-/* 🌙 HEADER */
+/* Header */
 .header-moon {
   background: #f7e1b5;
   border-radius: 0 0 100% 100%;
   text-align: center;
   padding: 30px 20px 40px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
 }
 
 .header-moon h1 {
@@ -32,7 +31,7 @@ body > *:not(.header-moon) {
   color: #7a4a12;
 }
 
-/* 🚗💨 Abholer */
+/* Abholer */
 #pickupBox {
   position: fixed;
   top: 10px;
@@ -42,11 +41,6 @@ body > *:not(.header-moon) {
   background: white;
   padding: 6px;
   border-radius: 10px;
-}
-
-/* 🔁 Modus */
-.mode-switch button {
-  margin-right: 6px;
 }
 
 /* Icons */
@@ -74,15 +68,10 @@ body > *:not(.header-moon) {
   align-items: center;
 }
 
-/* Übersicht */
-.overview-box, .baker-box {
+/* Boxen */
+.box {
   background: rgba(255,255,255,0.95);
   padding: 10px;
   margin: 8px 0;
   border-radius: 6px;
-}
-
-.checked {
-  text-decoration: line-through;
-  opacity: 0.6;
 }
