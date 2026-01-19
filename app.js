@@ -1,4 +1,3 @@
-/******** FIREBASE ********/
 firebase.initializeApp({
   apiKey: "AIzaSyA8dGj6T1E3PkO3YBu3OdpW_ZjCg00dncU",
   authDomain: "brotifyneu.firebaseapp.com",
@@ -20,14 +19,10 @@ const PRODUCTS = {
 };
 
 let cart = {};
-const productsEl = document.getElementById("products");
-const overviewEl = document.getElementById("overview");
-const bakerList = document.getElementById("bakerList");
 
-/******** ICONS ********/
+/******** ICON PICKER ********/
 function renderIcons() {
-  const picker = document.getElementById("iconPicker");
-  picker.innerHTML = "";
+  iconPicker.innerHTML = "";
   ICONS.forEach((i, idx) => {
     const s = document.createElement("span");
     s.textContent = i;
@@ -37,19 +32,19 @@ function renderIcons() {
       s.classList.add("selected");
       selectedIcon = i;
     };
-    picker.appendChild(s);
+    iconPicker.appendChild(s);
   });
 }
 
 /******** PRODUKTE ********/
 function renderProducts() {
-  productsEl.innerHTML = "";
+  products.innerHTML = "";
   cart = {};
   for (let c in PRODUCTS) {
-    productsEl.innerHTML += `<h3>${c}</h3>`;
+    products.innerHTML += `<h3>${c}</h3>`;
     PRODUCTS[c].forEach(p => {
       cart[p] = 0;
-      productsEl.innerHTML += `
+      products.innerHTML += `
         <div class="product">
           <div>${p}</div>
           <button onclick="change('${p}',-1)">−</button>
@@ -59,23 +54,20 @@ function renderProducts() {
     });
   }
 }
-
 window.change = (p,d) => {
   cart[p] = Math.max(0, cart[p]+d);
   document.getElementById("a_"+p).innerText = cart[p];
 };
 
-/******** BESTELLUNG ********/
-document.getElementById("saveBtn").onclick = () => {
-  const family = family.value;
-  if (!family) return alert("Name fehlt");
+/******** SPEICHERN ********/
+saveBtn.onclick = () => {
+  if (!family.value) return alert("Familienname fehlt");
 
-  db.ref("orders/"+family).set({
-    family,
+  db.ref("orders/"+family.value).set({
+    family: family.value,
     icon: selectedIcon,
     items: cart,
-    note: note.value,
-    done: false
+    note: note.value
   });
 
   family.value = "";
@@ -86,36 +78,49 @@ document.getElementById("saveBtn").onclick = () => {
 
 /******** LIVE ********/
 db.ref("orders").on("value", snap => {
-  overviewEl.innerHTML = "";
-  bakerList.innerHTML = "";
+  overview.innerHTML = "";
+  totals.innerHTML = "";
+  families.innerHTML = "";
+
+  const sum = {};
 
   snap.forEach(c => {
     const d = c.val();
 
-    // Übersicht
-    const box = document.createElement("div");
-    box.className = "overview-box";
-    box.innerHTML = `${d.icon} <b>${d.family}</b><br>${d.note||""}`;
-    overviewEl.appendChild(box);
+    // Übersicht Bestellung
+    overview.innerHTML += `
+      <div class="box">
+        ${d.icon} <b>${d.family}</b><br>
+        ${d.note || ""}
+      </div>`;
 
-    // Bäcker
-    const b = document.createElement("div");
-    b.className = "baker-box" + (d.done?" checked":"");
-    b.innerHTML = `${d.icon} ${d.family} – ${d.note||""}`;
-    b.onclick = () => db.ref("orders/"+c.key+"/done").set(!d.done);
-    bakerList.appendChild(b);
+    // Familie einzeln
+    let famHtml = `<div class="box">${d.icon} <b>${d.family}</b><br>`;
+    for (let i in d.items) {
+      if (d.items[i] > 0) {
+        famHtml += `${i}: ${d.items[i]}×<br>`;
+        sum[i] = (sum[i] || 0) + d.items[i];
+      }
+    }
+    famHtml += `<i>${d.note||""}</i></div>`;
+    families.innerHTML += famHtml;
   });
+
+  // Gesamt
+  for (let i in sum) {
+    totals.innerHTML += `<div>${i}: <b>${sum[i]}×</b></div>`;
+  }
 });
 
 /******** MODUS ********/
-window.showOrder = () => {
+function showOrder() {
   orderView.style.display="block";
-  bakerView.style.display="none";
-};
-window.showBaker = () => {
+  shopView.style.display="none";
+}
+function showShop() {
   orderView.style.display="none";
-  bakerView.style.display="block";
-};
+  shopView.style.display="block";
+}
 
 /******** ABHOLER ********/
 db.ref("meta/abholer").on("value", s=>{
