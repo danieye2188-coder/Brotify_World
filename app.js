@@ -1,4 +1,4 @@
-// Firebase
+// 🔥 Firebase
 var firebaseConfig = {
   apiKey: "AIzaSyA8dGj6T1E3PkO3YBu3OdpW_ZjCg00dncU",
   authDomain: "brotifyneu.firebaseapp.com",
@@ -9,21 +9,41 @@ var firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-// Produkte
+// 🥖 KOMPLETTE ARTIKELLISTE
 const PRODUCTS = [
+  // Weckle & Brötchen
   "Laugenweckle",
   "Körnerweckle",
   "Doppelweckle",
   "Seelen",
+  "Sonnenblumeweckle",
+  "Kürbisweckle",
+  "Dinkelweckle",
+  "Vollkornweckle",
+  "Mehrkornweckle",
+  "Roggenweckle",
+
+  // Laugengebäck & Laugenecken
+  "Laugenstange",
+  "Laugenhörnchen",
+  "Laugenecke klassisch",
+  "Laugenecke mit Körnern",
   "Brezel",
-  "Buttercroissant"
+
+  // Croissants & süßes Gebäck
+  "Buttercroissant",
+  "Schokocroissant",
+
+  // Brote & Zopf
+  "Zopf",
+  "Kleines Landbrot"
 ];
 
 const cart = {};
 const productsEl = document.getElementById("products");
 const overviewEl = document.getElementById("overview");
 
-// Produkte anzeigen
+// 🛒 Produkte anzeigen
 function renderProducts() {
   productsEl.innerHTML = "";
 
@@ -63,7 +83,7 @@ function renderProducts() {
   });
 }
 
-// Bestellung speichern
+// 💾 Bestellung speichern
 document.getElementById("saveBtn").onclick = () => {
   const family = document.getElementById("family").value;
   if (!family) return alert("Familienname fehlt");
@@ -71,7 +91,7 @@ document.getElementById("saveBtn").onclick = () => {
   db.ref("orders/" + family).set(cart);
 };
 
-// Live Übersicht
+// 🔴 Live-Übersicht
 db.ref("orders").on("value", snap => {
   overviewEl.innerHTML = "";
   snap.forEach(c => {
@@ -80,11 +100,13 @@ db.ref("orders").on("value", snap => {
     box.innerHTML = `<b>${c.key}</b>`;
     const items = c.val();
     for (let i in items) {
-      if (items[i] > 0) box.innerHTML += `<br>${i}: ${items[i]}×`;
+      if (items[i] > 0) {
+        box.innerHTML += `<br>${i}: ${items[i]}×`;
+      }
     }
     overviewEl.appendChild(box);
   });
 });
 
-// Start
+// 🚀 Start
 renderProducts();
