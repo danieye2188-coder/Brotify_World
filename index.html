@@ -12,19 +12,23 @@
 <p>Gemeinsames Sonntagsfrühstück planen</p>
 
 <input id="family" placeholder="Familienname">
-<textarea id="note" placeholder="Bemerkung (z. B. gut gebacken)"></textarea>
+
+<textarea id="note" placeholder="Bemerkung (z. B. Weckle geschnitten)"></textarea>
 
 <div id="products"></div>
 
-<button onclick="submitOrder()">Bestellung speichern</button>
+<button onclick="submitOrder()">🛒 Bestellung speichern</button>
 
 <hr>
 
 <h2>📋 Gesamtübersicht</h2>
 <div id="overview"></div>
 
+<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
+<!-- App Logik -->
 <script src="app.js"></script>
 
 </body>
