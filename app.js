@@ -1,129 +1,179 @@
 /******** FIREBASE ********/
-firebase.initializeApp({
+var firebaseConfig = {
   apiKey: "AIzaSyA8dGj6T1E3PkO3YBu3OdpW_ZjCg00dncU",
   authDomain: "brotifyneu.firebaseapp.com",
   databaseURL: "https://brotifyneu-default-rtdb.firebaseio.com",
   projectId: "brotifyneu"
-});
+};
+firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-/******** ICONS ********/
+/******** 🧩 ICONS ********/
 const ICONS = ["🦊","🐻","🦄","🍄","👻","🐸","🐼","🐱","🐶","🦉","🐯","🐷","🐮","🐰","🐵"];
 let selectedIcon = ICONS[0];
 
-/******** PRODUKTE ********/
+/******** 🥖 PRODUKTE ********/
 const PRODUCTS = {
-  "Weckle & Brötchen": ["Laugenweckle","Körnerweckle","Doppelweckle","Seelen"],
-  "Laugengebäck": ["Brezel","Laugenstange"],
-  "Croissants": ["Buttercroissant","Schokocroissant"],
-  "Brot": ["Zopf"]
+  "Weckle & Brötchen": [
+    "Laugenweckle","Körnerweckle","Doppelweckle","Seelen",
+    "Sonnenblumeweckle","Kürbisweckle","Dinkelweckle",
+    "Vollkornweckle","Mehrkornweckle","Roggenweckle"
+  ],
+  "Laugengebäck & Laugenecken": [
+    "Laugenstange","Laugenhörnchen",
+    "Laugenecke klassisch","Laugenecke mit Körnern","Brezel"
+  ],
+  "Croissants & süßes Gebäck": [
+    "Buttercroissant","Schokocroissant"
+  ],
+  "Brote & Zopf": [
+    "Zopf","Kleines Landbrot"
+  ]
 };
 
 let cart = {};
 const productsEl = document.getElementById("products");
 const overviewEl = document.getElementById("overview");
-const bakerList = document.getElementById("bakerList");
+const familyInput = document.getElementById("family");
 
-/******** ICONS ********/
+/******** 🧩 ICON PICKER ********/
 function renderIcons() {
   const picker = document.getElementById("iconPicker");
   picker.innerHTML = "";
-  ICONS.forEach((i, idx) => {
-    const s = document.createElement("span");
-    s.textContent = i;
-    s.className = "icon" + (idx===0?" selected":"");
-    s.onclick = () => {
-      document.querySelectorAll(".icon").forEach(x=>x.classList.remove("selected"));
-      s.classList.add("selected");
-      selectedIcon = i;
+
+  ICONS.forEach((icon, index) => {
+    const span = document.createElement("span");
+    span.textContent = icon;
+    span.className = "icon";
+    if (index === 0) span.classList.add("selected");
+
+    span.onclick = () => {
+      document.querySelectorAll(".icon").forEach(i => i.classList.remove("selected"));
+      span.classList.add("selected");
+      selectedIcon = icon;
     };
-    picker.appendChild(s);
+
+    picker.appendChild(span);
   });
+
+  selectedIcon = ICONS[0];
 }
 
-/******** PRODUKTE ********/
+/******** 🛒 PRODUKTE ********/
 function renderProducts() {
   productsEl.innerHTML = "";
   cart = {};
-  for (let c in PRODUCTS) {
-    productsEl.innerHTML += `<h3>${c}</h3>`;
-    PRODUCTS[c].forEach(p => {
+
+  for (let cat in PRODUCTS) {
+    const h = document.createElement("h3");
+    h.textContent = cat;
+    productsEl.appendChild(h);
+
+    PRODUCTS[cat].forEach(p => {
       cart[p] = 0;
-      productsEl.innerHTML += `
-        <div class="product">
-          <div>${p}</div>
-          <button onclick="change('${p}',-1)">−</button>
-          <div id="a_${p}">0</div>
-          <button onclick="change('${p}',1)">+</button>
-        </div>`;
+
+      const row = document.createElement("div");
+      row.className = "product";
+
+      const name = document.createElement("div");
+      name.textContent = p;
+
+      const minus = document.createElement("button");
+      minus.textContent = "−";
+      minus.className = "pm";
+
+      const amt = document.createElement("div");
+      amt.className = "amount";
+      amt.textContent = "0";
+
+      const plus = document.createElement("button");
+      plus.textContent = "+";
+      plus.className = "pm";
+
+      minus.onclick = () => {
+        if (cart[p] > 0) {
+          cart[p]--;
+          amt.textContent = cart[p];
+        }
+      };
+
+      plus.onclick = () => {
+        cart[p]++;
+        amt.textContent = cart[p];
+      };
+
+      row.append(name, minus, amt, plus);
+      productsEl.appendChild(row);
     });
   }
 }
 
-window.change = (p,d) => {
-  cart[p] = Math.max(0, cart[p]+d);
-  document.getElementById("a_"+p).innerText = cart[p];
-};
-
-/******** BESTELLUNG ********/
+/******** 💾 BESTELLUNG SPEICHERN + RESET ********/
 document.getElementById("saveBtn").onclick = () => {
-  const family = family.value;
-  if (!family) return alert("Name fehlt");
+  const family = familyInput.value.trim();
+  if (!family) return alert("Familienname fehlt");
 
-  db.ref("orders/"+family).set({
+  db.ref("orders/" + family).set({
     family,
     icon: selectedIcon,
-    items: cart,
-    note: note.value,
-    done: false
+    items: cart
   });
 
-  family.value = "";
-  note.value = "";
-  renderProducts();
-  renderIcons();
+  /* 🔄 RESET NACH SPEICHERN */
+  familyInput.value = "";      // Name leeren
+  renderProducts();            // Mengen auf 0
+  renderIcons();               // Icon zurücksetzen
 };
 
-/******** LIVE ********/
+/******** 🔴 LIVE + ❌ LÖSCHEN ********/
 db.ref("orders").on("value", snap => {
   overviewEl.innerHTML = "";
-  bakerList.innerHTML = "";
 
   snap.forEach(c => {
     const d = c.val();
-
-    // Übersicht
     const box = document.createElement("div");
     box.className = "overview-box";
-    box.innerHTML = `${d.icon} <b>${d.family}</b><br>${d.note||""}`;
-    overviewEl.appendChild(box);
 
-    // Bäcker
-    const b = document.createElement("div");
-    b.className = "baker-box" + (d.done?" checked":"");
-    b.innerHTML = `${d.icon} ${d.family} – ${d.note||""}`;
-    b.onclick = () => db.ref("orders/"+c.key+"/done").set(!d.done);
-    bakerList.appendChild(b);
+    box.innerHTML = `${d.icon} <b>${c.key}</b>`;
+
+    for (let i in d.items) {
+      if (d.items[i] > 0) {
+        box.innerHTML += `<br>${i}: ${d.items[i]}×`;
+      }
+    }
+
+    const del = document.createElement("button");
+    del.textContent = "❌ Bestellung löschen";
+    del.className = "delete-btn";
+    del.onclick = () => {
+      if (confirm("Bestellung wirklich löschen?")) {
+        db.ref("orders/" + c.key).remove();
+      }
+    };
+
+    box.appendChild(del);
+    overviewEl.appendChild(box);
   });
 });
 
-/******** MODUS ********/
-window.showOrder = () => {
-  orderView.style.display="block";
-  bakerView.style.display="none";
-};
-window.showBaker = () => {
-  orderView.style.display="none";
-  bakerView.style.display="block";
+/******** 🚗💨 ABHOLER (LIVE) ********/
+const pickupInput = document.getElementById("pickupInput");
+const pickupLabel = document.getElementById("pickupLabel");
+
+db.ref("meta/abholer").on("value", snap => {
+  const name = snap.val();
+  pickupLabel.textContent = name ? `🚗💨 ${name}` : "🚗💨";
+  pickupInput.style.display = name ? "none" : "inline-block";
+});
+
+document.getElementById("savePickup").onclick = () => {
+  if (!pickupInput.value) return;
+  db.ref("meta/abholer").set(pickupInput.value);
 };
 
-/******** ABHOLER ********/
-db.ref("meta/abholer").on("value", s=>{
-  pickupLabel.innerText = s.val()?`🚗💨 ${s.val()}`:"🚗💨";
-  pickupInput.style.display = s.val()?"none":"inline";
-});
-savePickup.onclick = ()=> pickupInput.value && db.ref("meta/abholer").set(pickupInput.value);
-clearPickup.onclick = ()=> db.ref("meta/abholer").remove();
+document.getElementById("clearPickup").onclick = () => {
+  db.ref("meta/abholer").remove();
+};
 
 /******** START ********/
 renderIcons();
