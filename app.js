@@ -31,7 +31,7 @@ const cart = {};
 const productsEl = document.getElementById("products");
 const overviewEl = document.getElementById("overview");
 
-/******** PRODUKTE ********/
+/******** 🛒 PRODUKTE ********/
 function renderProducts() {
   productsEl.innerHTML = "";
 
@@ -77,72 +77,58 @@ function renderProducts() {
   }
 }
 
-/******** BESTELLUNG SPEICHERN ********/
+/******** 💾 BESTELLUNG ********/
 document.getElementById("saveBtn").onclick = () => {
   const family = document.getElementById("family").value;
   if (!family) return alert("Familienname fehlt");
-
   db.ref("orders/" + family).set(cart);
 };
 
-/******** 🔴 LIVE + LÖSCHEN ********/
+/******** 🔴 LIVE-BESTELLUNGEN ********/
 db.ref("orders").on("value", snap => {
   overviewEl.innerHTML = "";
-
   snap.forEach(c => {
     const box = document.createElement("div");
     box.className = "overview-box";
-
     box.innerHTML = `<b>${c.key}</b>`;
-
     const items = c.val();
     for (let i in items) {
       if (items[i] > 0) {
         box.innerHTML += `<br>${i}: ${items[i]}×`;
       }
     }
-
-    const del = document.createElement("button");
-    del.textContent = "❌ Bestellung löschen";
-    del.className = "delete-btn";
-    del.onclick = () => {
-      if (confirm("Bestellung wirklich löschen?")) {
-        db.ref("orders/" + c.key).remove();
-      }
-    };
-
-    box.appendChild(del);
     overviewEl.appendChild(box);
   });
 });
 
-/******** 🚗💨 ABHOLER ********/
+/******** 🚗💨 ABHOLER – LIVE FÜR ALLE ********/
 const pickupInput = document.getElementById("pickupInput");
+const pickupLabel = document.getElementById("pickupLabel");
 const savePickup = document.getElementById("savePickup");
 const clearPickup = document.getElementById("clearPickup");
-const pickupLabel = document.getElementById("pickupLabel");
 
-function loadPickup() {
-  const p = localStorage.getItem("pickup");
-  if (p) {
-    pickupLabel.textContent = `🚗💨 ${p}`;
+// LIVE lesen
+db.ref("meta/abholer").on("value", snap => {
+  const name = snap.val();
+  if (name) {
+    pickupLabel.textContent = `🚗💨 ${name}`;
     pickupInput.style.display = "none";
+  } else {
+    pickupLabel.textContent = "🚗💨";
+    pickupInput.style.display = "inline-block";
   }
-}
+});
 
+// speichern
 savePickup.onclick = () => {
   if (!pickupInput.value) return;
-  localStorage.setItem("pickup", pickupInput.value);
-  loadPickup();
+  db.ref("meta/abholer").set(pickupInput.value);
 };
 
+// löschen
 clearPickup.onclick = () => {
-  localStorage.removeItem("pickup");
-  pickupLabel.textContent = "🚗💨";
-  pickupInput.style.display = "inline-block";
-  pickupInput.value = "";
+  db.ref("meta/abholer").remove();
 };
 
 /******** START ********/
 renderProducts();
-loadPickup();
