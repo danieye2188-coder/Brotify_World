@@ -8,7 +8,7 @@ var firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-/******** 🧩 FAMILIEN ICONS ********/
+/******** 🧩 ICONS ********/
 const ICONS = ["🦊","🐻","🦄","🍄","👻","🐸","🐼","🐱","🐶","🦉","🐯","🐷","🐮","🐰","🐵"];
 let selectedIcon = ICONS[0];
 
@@ -31,33 +31,38 @@ const PRODUCTS = {
   ]
 };
 
-const cart = {};
+let cart = {};
 const productsEl = document.getElementById("products");
 const overviewEl = document.getElementById("overview");
+const familyInput = document.getElementById("family");
 
 /******** 🧩 ICON PICKER ********/
 function renderIcons() {
   const picker = document.getElementById("iconPicker");
   picker.innerHTML = "";
 
-  ICONS.forEach(icon => {
+  ICONS.forEach((icon, index) => {
     const span = document.createElement("span");
     span.textContent = icon;
     span.className = "icon";
+    if (index === 0) span.classList.add("selected");
+
     span.onclick = () => {
       document.querySelectorAll(".icon").forEach(i => i.classList.remove("selected"));
       span.classList.add("selected");
       selectedIcon = icon;
     };
+
     picker.appendChild(span);
   });
 
-  picker.firstChild.classList.add("selected");
+  selectedIcon = ICONS[0];
 }
 
 /******** 🛒 PRODUKTE ********/
 function renderProducts() {
   productsEl.innerHTML = "";
+  cart = {};
 
   for (let cat in PRODUCTS) {
     const h = document.createElement("h3");
@@ -76,12 +81,6 @@ function renderProducts() {
       const minus = document.createElement("button");
       minus.textContent = "−";
       minus.className = "pm";
-      minus.onclick = () => {
-        if (cart[p] > 0) {
-          cart[p]--;
-          amt.textContent = cart[p];
-        }
-      };
 
       const amt = document.createElement("div");
       amt.className = "amount";
@@ -90,6 +89,14 @@ function renderProducts() {
       const plus = document.createElement("button");
       plus.textContent = "+";
       plus.className = "pm";
+
+      minus.onclick = () => {
+        if (cart[p] > 0) {
+          cart[p]--;
+          amt.textContent = cart[p];
+        }
+      };
+
       plus.onclick = () => {
         cart[p]++;
         amt.textContent = cart[p];
@@ -101,9 +108,9 @@ function renderProducts() {
   }
 }
 
-/******** 💾 BESTELLUNG ********/
+/******** 💾 BESTELLUNG SPEICHERN + RESET ********/
 document.getElementById("saveBtn").onclick = () => {
-  const family = document.getElementById("family").value;
+  const family = familyInput.value.trim();
   if (!family) return alert("Familienname fehlt");
 
   db.ref("orders/" + family).set({
@@ -111,6 +118,11 @@ document.getElementById("saveBtn").onclick = () => {
     icon: selectedIcon,
     items: cart
   });
+
+  /* 🔄 RESET NACH SPEICHERN */
+  familyInput.value = "";      // Name leeren
+  renderProducts();            // Mengen auf 0
+  renderIcons();               // Icon zurücksetzen
 };
 
 /******** 🔴 LIVE + ❌ LÖSCHEN ********/
