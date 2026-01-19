@@ -3,8 +3,7 @@ var firebaseConfig = {
   apiKey: "AIzaSyA8dGj6T1E3PkO3YBu3OdpW_ZjCg00dncU",
   authDomain: "brotifyneu.firebaseapp.com",
   databaseURL: "https://brotifyneu-default-rtdb.firebaseio.com",
-  projectId: "brotifyneu",
-  appId: "1:247031375086:web:08c171ec7e542eeda0ffff"
+  projectId: "brotifyneu"
 };
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
@@ -24,9 +23,27 @@ const PRODUCTS = {
 let cart = {};
 let lastFamily = "";
 
+/******** ABHOLER ********/
+function savePickup() {
+  const name = pickupInput.value;
+  if (!name) return;
+  localStorage.setItem("pickup", name);
+  pickupInput.value = "";
+  pickupBox.style.display = "none";
+  updatePickupDisplay();
+}
+
+function updatePickupDisplay() {
+  const p = localStorage.getItem("pickup");
+  if (p) {
+    pickupDisplay.textContent = `👤🚗 Abholer: ${p}`;
+    pickupBaker.textContent = `👤🚗 Abholer: ${p}`;
+  }
+}
+
 /******** ICON PICKER ********/
 function renderIcons() {
-  const box = document.getElementById("iconPicker");
+  iconPicker.innerHTML = "";
   ICONS.forEach(i => {
     const span = document.createElement("span");
     span.textContent = i;
@@ -36,19 +53,19 @@ function renderIcons() {
       span.classList.add("selected");
       selectedIcon = i;
     };
-    box.appendChild(span);
+    iconPicker.appendChild(span);
   });
-  box.firstChild.classList.add("selected");
+  iconPicker.firstChild.classList.add("selected");
 }
 
 /******** PRODUKTE ********/
 function renderProducts() {
-  const c = document.getElementById("products");
-  c.innerHTML = "";
+  products.innerHTML = "";
+  cart = {};
   for (let cat in PRODUCTS) {
     const h = document.createElement("h3");
     h.textContent = cat;
-    c.appendChild(h);
+    products.appendChild(h);
 
     PRODUCTS[cat].forEach(p => {
       cart[p] = 0;
@@ -79,13 +96,13 @@ function renderProducts() {
       };
 
       row.append(name, minus, amt, plus);
-      c.appendChild(row);
+      products.appendChild(row);
     });
   }
 }
 
 /******** RESET BEI FAMILIE ********/
-document.getElementById("family").addEventListener("input", e => {
+family.addEventListener("input", e => {
   if (e.target.value !== lastFamily) {
     lastFamily = e.target.value;
     renderProducts();
@@ -94,20 +111,10 @@ document.getElementById("family").addEventListener("input", e => {
 
 /******** BESTELLUNG ********/
 function submitOrder() {
-  const family = familyInput.value;
-  const pickup = pickupInput.value;
-  if (!family) return alert("Familienname fehlt");
-
-  if (pickup) {
-    localStorage.setItem("pickup", pickup);
-    pickupInput.style.display = "none";
-    pickupDisplay.textContent = "👤 Abholer: " + pickup;
-  }
-
-  db.ref("orders/" + family).set({
-    family,
+  if (!family.value) return alert("Familienname fehlt");
+  db.ref("orders/" + family.value).set({
+    family: family.value,
     icon: selectedIcon,
-    pickup,
     items: cart
   });
 }
@@ -147,12 +154,8 @@ function showBakerView(){orderView.style.display="none";bakerView.style.display=
 renderIcons();
 renderProducts();
 showOrderView();
+updatePickupDisplay();
 
-const familyInput = document.getElementById("family");
-const pickupInput = document.getElementById("pickup");
-const pickupDisplay = document.getElementById("pickupDisplay");
-
-const savedPickup = localStorage.getItem("pickup");
-if (savedPickup) {
-  pickupInput.style.display = "none";
-  pickupDisplay.textContent = "👤 Abholer: " + savedPickup;
+if (localStorage.getItem("pickup")) {
+  pickupBox.style.display = "none";
+}
