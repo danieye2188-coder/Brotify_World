@@ -1,3 +1,6 @@
+/***********************************
+ * 🔥 Firebase Initialisierung
+ ***********************************/
 var firebaseConfig = {
   apiKey: "AIzaSyA8dGj6T1E3PkO3YBu3OdpW_ZjCg00dncU",
   authDomain: "brotifyneu.firebaseapp.com",
@@ -12,7 +15,9 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
 
-// 🥖 Produktkatalog
+/***********************************
+ * 🥖 PRODUKTKATALOG (KOMPLETT)
+ ***********************************/
 const PRODUCTS = {
   "Weckle & Brötchen": [
     "Laugenweckle",
@@ -44,11 +49,15 @@ const PRODUCTS = {
 };
 
 
-// 🛒 Warenkorb
+/***********************************
+ * 🛒 WARENKORB
+ ***********************************/
 const cart = {};
 
 
-// 📋 PRODUKTE ANZEIGEN (DAS FEHLTE BEI DIR)
+/***********************************
+ * 📋 PRODUKTE MIT + / – ANZEIGEN
+ ***********************************/
 function renderProducts() {
   const container = document.getElementById("products");
   container.innerHTML = "";
@@ -59,34 +68,53 @@ function renderProducts() {
     container.appendChild(h3);
 
     PRODUCTS[category].forEach(product => {
+      if (!cart[product]) cart[product] = 0;
+
       const row = document.createElement("div");
       row.className = "product";
 
       const label = document.createElement("span");
       label.textContent = product;
 
-      const input = document.createElement("input");
-      input.type = "number";
-      input.min = 0;
-      input.value = 0;
+      const minus = document.createElement("button");
+      minus.textContent = "−";
+      minus.onclick = () => {
+        if (cart[product] > 0) {
+          cart[product]--;
+          amount.textContent = cart[product];
+        }
+      };
 
-      input.oninput = () => {
-        cart[product] = parseInt(input.value) || 0;
+      const amount = document.createElement("span");
+      amount.textContent = cart[product];
+      amount.style.minWidth = "30px";
+      amount.style.textAlign = "center";
+      amount.style.display = "inline-block";
+
+      const plus = document.createElement("button");
+      plus.textContent = "+";
+      plus.onclick = () => {
+        cart[product]++;
+        amount.textContent = cart[product];
       };
 
       row.appendChild(label);
-      row.appendChild(input);
+      row.appendChild(minus);
+      row.appendChild(amount);
+      row.appendChild(plus);
+
       container.appendChild(row);
     });
   }
 }
 
-
-// 🚀 WICHTIG: FUNKTION AUFRUFEN
+// 🚀 WICHTIG: Produkte sofort anzeigen
 renderProducts();
 
 
-// 📦 BESTELLUNG SPEICHERN
+/***********************************
+ * 📦 BESTELLUNG SPEICHERN
+ ***********************************/
 function submitOrder() {
   const family = document.getElementById("family").value;
   const pickup = document.getElementById("pickup").value;
@@ -105,11 +133,13 @@ function submitOrder() {
     time: Date.now()
   });
 
-  alert("Bestellung gespeichert");
+  alert("Bestellung gespeichert ✅");
 }
 
 
-// 🔴 LIVE-GESAMTÜBERSICHT
+/***********************************
+ * 🔴 LIVE-GESAMTÜBERSICHT
+ ***********************************/
 db.ref("orders").on("value", snapshot => {
   const overview = document.getElementById("overview");
   overview.innerHTML = "";
