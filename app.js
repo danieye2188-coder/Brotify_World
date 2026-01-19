@@ -81,52 +81,56 @@ function renderProducts() {
 document.getElementById("saveBtn").onclick = () => {
   const family = document.getElementById("family").value;
   if (!family) return alert("Familienname fehlt");
+
   db.ref("orders/" + family).set(cart);
 };
 
-/******** 🔴 LIVE-BESTELLUNGEN ********/
+/******** 🔴 LIVE + ❌ LÖSCHEN ********/
 db.ref("orders").on("value", snap => {
   overviewEl.innerHTML = "";
+
   snap.forEach(c => {
     const box = document.createElement("div");
     box.className = "overview-box";
     box.innerHTML = `<b>${c.key}</b>`;
+
     const items = c.val();
     for (let i in items) {
       if (items[i] > 0) {
         box.innerHTML += `<br>${i}: ${items[i]}×`;
       }
     }
+
+    const del = document.createElement("button");
+    del.textContent = "❌ Bestellung löschen";
+    del.className = "delete-btn";
+    del.onclick = () => {
+      if (confirm("Bestellung wirklich löschen?")) {
+        db.ref("orders/" + c.key).remove();
+      }
+    };
+
+    box.appendChild(del);
     overviewEl.appendChild(box);
   });
 });
 
-/******** 🚗💨 ABHOLER – LIVE FÜR ALLE ********/
+/******** 🚗💨 ABHOLER (LIVE) ********/
 const pickupInput = document.getElementById("pickupInput");
 const pickupLabel = document.getElementById("pickupLabel");
-const savePickup = document.getElementById("savePickup");
-const clearPickup = document.getElementById("clearPickup");
 
-// LIVE lesen
 db.ref("meta/abholer").on("value", snap => {
   const name = snap.val();
-  if (name) {
-    pickupLabel.textContent = `🚗💨 ${name}`;
-    pickupInput.style.display = "none";
-  } else {
-    pickupLabel.textContent = "🚗💨";
-    pickupInput.style.display = "inline-block";
-  }
+  pickupLabel.textContent = name ? `🚗💨 ${name}` : "🚗💨";
+  pickupInput.style.display = name ? "none" : "inline-block";
 });
 
-// speichern
-savePickup.onclick = () => {
+document.getElementById("savePickup").onclick = () => {
   if (!pickupInput.value) return;
   db.ref("meta/abholer").set(pickupInput.value);
 };
 
-// löschen
-clearPickup.onclick = () => {
+document.getElementById("clearPickup").onclick = () => {
   db.ref("meta/abholer").remove();
 };
 
