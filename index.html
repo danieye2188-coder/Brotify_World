@@ -2,18 +2,26 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8">
-  <title>Live Web App</title>
+  <title>Brotify 🍞</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<h1>🌐 Live Web App</h1>
+<h1>🍞 Brotfy</h1>
+<p>Gemeinsames Sonntagsfrühstück planen</p>
 
-<input id="input" placeholder="Text eingeben">
-<button onclick="send()">Senden</button>
+<input id="family" placeholder="Familienname">
+<textarea id="note" placeholder="Bemerkung (z. B. gut gebacken)"></textarea>
 
-<ul id="list"></ul>
+<div id="products"></div>
+
+<button onclick="submitOrder()">Bestellung speichern</button>
+
+<hr>
+
+<h2>📋 Gesamtübersicht</h2>
+<div id="overview"></div>
 
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
