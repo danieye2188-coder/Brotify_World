@@ -8,7 +8,11 @@ var firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-/******** PRODUKTE ********/
+/******** 🧩 FAMILIEN ICONS ********/
+const ICONS = ["🦊","🐻","🦄","🍄","👻","🐸","🐼","🐱","🐶","🦉","🐯","🐷","🐮","🐰","🐵"];
+let selectedIcon = ICONS[0];
+
+/******** 🥖 PRODUKTE ********/
 const PRODUCTS = {
   "Weckle & Brötchen": [
     "Laugenweckle","Körnerweckle","Doppelweckle","Seelen",
@@ -30,6 +34,26 @@ const PRODUCTS = {
 const cart = {};
 const productsEl = document.getElementById("products");
 const overviewEl = document.getElementById("overview");
+
+/******** 🧩 ICON PICKER ********/
+function renderIcons() {
+  const picker = document.getElementById("iconPicker");
+  picker.innerHTML = "";
+
+  ICONS.forEach(icon => {
+    const span = document.createElement("span");
+    span.textContent = icon;
+    span.className = "icon";
+    span.onclick = () => {
+      document.querySelectorAll(".icon").forEach(i => i.classList.remove("selected"));
+      span.classList.add("selected");
+      selectedIcon = icon;
+    };
+    picker.appendChild(span);
+  });
+
+  picker.firstChild.classList.add("selected");
+}
 
 /******** 🛒 PRODUKTE ********/
 function renderProducts() {
@@ -82,7 +106,11 @@ document.getElementById("saveBtn").onclick = () => {
   const family = document.getElementById("family").value;
   if (!family) return alert("Familienname fehlt");
 
-  db.ref("orders/" + family).set(cart);
+  db.ref("orders/" + family).set({
+    family,
+    icon: selectedIcon,
+    items: cart
+  });
 };
 
 /******** 🔴 LIVE + ❌ LÖSCHEN ********/
@@ -90,14 +118,15 @@ db.ref("orders").on("value", snap => {
   overviewEl.innerHTML = "";
 
   snap.forEach(c => {
+    const d = c.val();
     const box = document.createElement("div");
     box.className = "overview-box";
-    box.innerHTML = `<b>${c.key}</b>`;
 
-    const items = c.val();
-    for (let i in items) {
-      if (items[i] > 0) {
-        box.innerHTML += `<br>${i}: ${items[i]}×`;
+    box.innerHTML = `${d.icon} <b>${c.key}</b>`;
+
+    for (let i in d.items) {
+      if (d.items[i] > 0) {
+        box.innerHTML += `<br>${i}: ${d.items[i]}×`;
       }
     }
 
@@ -135,4 +164,5 @@ document.getElementById("clearPickup").onclick = () => {
 };
 
 /******** START ********/
+renderIcons();
 renderProducts();
