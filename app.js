@@ -164,3 +164,12 @@ db.ref("orders").on("value", snapshot => {
     overview.appendChild(box);
   });
 });
+function showOrderView() {
+  document.getElementById("orderView").style.display = "block";
+  document.getElementById("bakerView").style.display = "none";
+}
+
+function showBakerView() {
+  document.getElementById("orderView").style.display = "none";
+  document.getElementById("bakerView").style.display = "block";
+}
