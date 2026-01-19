@@ -10,6 +10,13 @@ body {
   display: flex;
   justify-content: flex-end;
   font-weight: bold;
+  margin-bottom: 6px;
+}
+
+#pickupBox {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 10px;
 }
 
 .switch button {
