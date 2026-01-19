@@ -1,4 +1,3 @@
-/* 🌅 HINTERGRUND MIT BILD */
 body {
   font-family: Arial, sans-serif;
   max-width: 900px;
@@ -11,7 +10,7 @@ body {
   background-attachment: fixed;
 }
 
-/* 🧾 Karten-Look für Inhalte (Lesbarkeit!) */
+/* Karten-Look */
 body > * {
   background: rgba(255, 255, 255, 0.94);
   padding: 14px;
@@ -19,22 +18,37 @@ body > * {
   border-radius: 12px;
 }
 
-/* KATEGORIE */
-h3 {
-  margin-top: 24px;
-  border-bottom: 2px solid #c58b2b;
-  padding-bottom: 4px;
+/* 🚗💨 Abholer Box */
+#pickupBox {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  background: rgba(255,255,255,0.95);
+  padding: 6px;
+  border-radius: 10px;
+  z-index: 999;
 }
 
-/* INPUTS */
-input, button {
-  width: 100%;
-  padding: 10px;
-  margin: 6px 0;
-  font-size: 16px;
+#pickupLabel {
+  font-size: 20px;
 }
 
-/* PRODUKT-ZEILE → SAUBERE AUSRICHTUNG */
+#pickupBox input {
+  width: 120px;
+  padding: 4px;
+}
+
+#pickupBox button {
+  padding: 4px 6px;
+  font-size: 14px;
+}
+
+/* Produkte */
 .product {
   display: grid;
   grid-template-columns: 1fr 40px 30px 40px;
@@ -43,25 +57,17 @@ input, button {
   margin: 6px 0;
 }
 
-.product-name {
-  font-weight: 500;
-}
-
-/* + / − BUTTONS */
 .pm {
   width: 40px;
   height: 40px;
   font-size: 20px;
-  text-align: center;
 }
 
-/* MENGE */
 .amount {
   text-align: center;
   font-weight: bold;
 }
 
-/* ÜBERSICHT */
 .overview-box {
   background: rgba(255,255,255,0.95);
   padding: 10px;
