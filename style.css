@@ -9,6 +9,7 @@ body {
   background-attachment: fixed;
 }
 
+/* Karten-Look */
 body > *:not(.header-moon) {
   background: rgba(255,255,255,0.94);
   padding: 14px;
@@ -16,12 +17,13 @@ body > *:not(.header-moon) {
   border-radius: 12px;
 }
 
-/* 🌙 HEADER */
+/* 🌙 HALBMOND HEADER */
 .header-moon {
   background: #f7e1b5;
   border-radius: 0 0 100% 100%;
   text-align: center;
   padding: 30px 20px 40px;
+  margin-bottom: 20px;
   box-shadow: 0 6px 20px rgba(0,0,0,0.15);
 }
 
@@ -32,6 +34,12 @@ body > *:not(.header-moon) {
   color: #7a4a12;
 }
 
+.header-moon p {
+  margin: 6px 0 0;
+  font-size: 18px;
+  color: #5f3b0d;
+}
+
 /* 🚗💨 Abholer */
 #pickupBox {
   position: fixed;
@@ -39,14 +47,15 @@ body > *:not(.header-moon) {
   right: 10px;
   display: flex;
   gap: 4px;
+  align-items: center;
   background: white;
   padding: 6px;
   border-radius: 10px;
+  z-index: 999;
 }
 
-/* 🔁 Modus */
-.mode-switch button {
-  margin-right: 6px;
+#pickupBox input {
+  width: 120px;
 }
 
 /* Icons */
@@ -54,35 +63,53 @@ body > *:not(.header-moon) {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
+  margin-bottom: 10px;
 }
 
 .icon {
   font-size: 26px;
   cursor: pointer;
+  padding: 4px;
+  border-radius: 6px;
 }
 
 .icon.selected {
   outline: 2px solid #c58b2b;
-  border-radius: 6px;
 }
 
 /* Produkte */
 .product {
   display: grid;
   grid-template-columns: 1fr 40px 30px 40px;
-  gap: 8px;
   align-items: center;
+  gap: 8px;
+  margin: 6px 0;
+}
+
+.pm {
+  width: 40px;
+  height: 40px;
+  font-size: 20px;
+}
+
+.amount {
+  text-align: center;
+  font-weight: bold;
 }
 
 /* Übersicht */
-.overview-box, .baker-box {
+.overview-box {
   background: rgba(255,255,255,0.95);
   padding: 10px;
   margin: 8px 0;
   border-radius: 6px;
 }
 
-.checked {
-  text-decoration: line-through;
-  opacity: 0.6;
+.delete-btn {
+  background: #d9534f;
+  color: white;
+  border: none;
+  padding: 6px;
+  width: 100%;
+  margin-top: 8px;
 }
