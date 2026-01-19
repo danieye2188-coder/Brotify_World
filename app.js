@@ -8,6 +8,20 @@ var firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
+/******** DOM ELEMENTE ********/
+const productsEl = document.getElementById("products");
+const familyInput = document.getElementById("familyInput");
+const iconPicker = document.getElementById("iconPicker");
+const overview = document.getElementById("overview");
+const bakerList = document.getElementById("bakerList");
+const orderView = document.getElementById("orderView");
+const bakerView = document.getElementById("bakerView");
+
+const pickupBox = document.getElementById("pickupBox");
+const pickupInput = document.getElementById("pickupInput");
+const pickupDisplay = document.getElementById("pickupDisplay");
+const pickupBaker = document.getElementById("pickupBaker");
+
 /******** ICONS ********/
 const ICONS = ["🦊","🐻","🦄","🍄","👻","🐸","🐼","🐱","🐶","🦉","🐯","🐷","🐮","🐰","🐵"];
 let selectedIcon = ICONS[0];
@@ -23,35 +37,17 @@ const PRODUCTS = {
 let cart = {};
 let lastFamily = "";
 
-/******** ABHOLER ********/
-function savePickup() {
-  const name = pickupInput.value;
-  if (!name) return;
-  localStorage.setItem("pickup", name);
-  pickupInput.value = "";
-  pickupBox.style.display = "none";
-  updatePickupDisplay();
-}
-
-function updatePickupDisplay() {
-  const p = localStorage.getItem("pickup");
-  if (p) {
-    pickupDisplay.textContent = `👤🚗 Abholer: ${p}`;
-    pickupBaker.textContent = `👤🚗 Abholer: ${p}`;
-  }
-}
-
 /******** ICON PICKER ********/
 function renderIcons() {
   iconPicker.innerHTML = "";
-  ICONS.forEach(i => {
+  ICONS.forEach(icon => {
     const span = document.createElement("span");
-    span.textContent = i;
+    span.textContent = icon;
     span.className = "icon";
     span.onclick = () => {
-      document.querySelectorAll(".icon").forEach(x=>x.classList.remove("selected"));
+      document.querySelectorAll(".icon").forEach(i=>i.classList.remove("selected"));
       span.classList.add("selected");
-      selectedIcon = i;
+      selectedIcon = icon;
     };
     iconPicker.appendChild(span);
   });
@@ -60,15 +56,17 @@ function renderIcons() {
 
 /******** PRODUKTE ********/
 function renderProducts() {
-  products.innerHTML = "";
+  productsEl.innerHTML = "";
   cart = {};
+
   for (let cat in PRODUCTS) {
     const h = document.createElement("h3");
     h.textContent = cat;
-    products.appendChild(h);
+    productsEl.appendChild(h);
 
     PRODUCTS[cat].forEach(p => {
       cart[p] = 0;
+
       const row = document.createElement("div");
       row.className = "product";
 
@@ -96,13 +94,29 @@ function renderProducts() {
       };
 
       row.append(name, minus, amt, plus);
-      products.appendChild(row);
+      productsEl.appendChild(row);
     });
   }
 }
 
+/******** ABHOLER ********/
+function updatePickup() {
+  const p = localStorage.getItem("pickup");
+  if (p) {
+    pickupDisplay.textContent = `👤🚗 Abholer: ${p}`;
+    pickupBaker.textContent = `👤🚗 Abholer: ${p}`;
+    pickupBox.style.display = "none";
+  }
+}
+
+document.getElementById("savePickupBtn").onclick = () => {
+  if (!pickupInput.value) return;
+  localStorage.setItem("pickup", pickupInput.value);
+  updatePickup();
+};
+
 /******** RESET BEI FAMILIE ********/
-family.addEventListener("input", e => {
+familyInput.addEventListener("input", e => {
   if (e.target.value !== lastFamily) {
     lastFamily = e.target.value;
     renderProducts();
@@ -110,14 +124,15 @@ family.addEventListener("input", e => {
 });
 
 /******** BESTELLUNG ********/
-function submitOrder() {
-  if (!family.value) return alert("Familienname fehlt");
-  db.ref("orders/" + family.value).set({
-    family: family.value,
+document.getElementById("saveOrderBtn").onclick = () => {
+  if (!familyInput.value) return alert("Familienname fehlt");
+
+  db.ref("orders/" + familyInput.value).set({
+    family: familyInput.value,
     icon: selectedIcon,
     items: cart
   });
-}
+};
 
 /******** LIVE ********/
 db.ref("orders").on("value", snap => {
@@ -133,7 +148,7 @@ db.ref("orders").on("value", snap => {
     for (let i in d.items) {
       if (d.items[i] > 0) {
         box.innerHTML += `<br>${i}: ${d.items[i]}×`;
-        totals[i] = (totals[i]||0) + d.items[i];
+        totals[i] = (totals[i] || 0) + d.items[i];
       }
     }
     overview.appendChild(box);
@@ -147,15 +162,16 @@ db.ref("orders").on("value", snap => {
 });
 
 /******** VIEW ********/
-function showOrderView(){orderView.style.display="block";bakerView.style.display="none";}
-function showBakerView(){orderView.style.display="none";bakerView.style.display="block";}
+document.getElementById("orderBtn").onclick = () => {
+  orderView.style.display = "block";
+  bakerView.style.display = "none";
+};
+document.getElementById("bakerBtn").onclick = () => {
+  orderView.style.display = "none";
+  bakerView.style.display = "block";
+};
 
 /******** INIT ********/
 renderIcons();
 renderProducts();
-showOrderView();
-updatePickupDisplay();
-
-if (localStorage.getItem("pickup")) {
-  pickupBox.style.display = "none";
-}
+updatePickup();
