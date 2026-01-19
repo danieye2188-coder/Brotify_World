@@ -10,6 +10,9 @@ var firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
+
+
+// 🥖 Produktkatalog
 const PRODUCTS = {
   "Weckle & Brötchen": [
     "Laugenweckle",
@@ -23,7 +26,6 @@ const PRODUCTS = {
     "Mehrkornweckle",
     "Roggenweckle"
   ],
-
   "Laugengebäck & Laugenecken": [
     "Laugenstange",
     "Laugenhörnchen",
@@ -31,28 +33,24 @@ const PRODUCTS = {
     "Laugenecke mit Körnern",
     "Brezel"
   ],
-
   "Croissants & süßes Gebäck": [
     "Buttercroissant",
     "Schokocroissant"
   ],
-
   "Brote & Zopf": [
     "Zopf",
     "Kleines Landbrot"
   ]
 };
+
+
+// 🛒 Warenkorb
 const cart = {};
 
+
+// 📋 PRODUKTE ANZEIGEN (DAS FEHLTE BEI DIR)
 function renderProducts() {
   const container = document.getElementById("products");
-
-  // 🔴 WICHTIGER SCHUTZ
-  if (!container) {
-    console.error("Element #products nicht gefunden");
-    return;
-  }
-
   container.innerHTML = "";
 
   for (let category in PRODUCTS) {
@@ -82,4 +80,57 @@ function renderProducts() {
     });
   }
 }
+
+
+// 🚀 WICHTIG: FUNKTION AUFRUFEN
 renderProducts();
+
+
+// 📦 BESTELLUNG SPEICHERN
+function submitOrder() {
+  const family = document.getElementById("family").value;
+  const pickup = document.getElementById("pickup").value;
+  const note = document.getElementById("note").value;
+
+  if (!family) {
+    alert("Bitte Familienname eingeben");
+    return;
+  }
+
+  db.ref("orders/" + family).set({
+    family: family,
+    pickup: pickup,
+    note: note,
+    items: cart,
+    time: Date.now()
+  });
+
+  alert("Bestellung gespeichert");
+}
+
+
+// 🔴 LIVE-GESAMTÜBERSICHT
+db.ref("orders").on("value", snapshot => {
+  const overview = document.getElementById("overview");
+  overview.innerHTML = "";
+
+  snapshot.forEach(child => {
+    const data = child.val();
+
+    const box = document.createElement("div");
+    box.className = "overview-box";
+
+    box.innerHTML =
+      `<strong>${data.family}</strong><br>
+       👤 Abholung: ${data.pickup || "-"}<br>
+       📝 ${data.note || ""}`;
+
+    for (let item in data.items) {
+      if (data.items[item] > 0) {
+        box.innerHTML += `<br>${item}: ${data.items[item]}×`;
+      }
+    }
+
+    overview.appendChild(box);
+  });
+});
