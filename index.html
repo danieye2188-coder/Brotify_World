@@ -19,41 +19,24 @@
   <button id="clearPickup">✖</button>
 </div>
 
-<!-- 🌙 HEADER -->
+<!-- 🌙 HALBMOND HEADER -->
 <div class="header-moon">
   <h1>Brotify</h1>
   <p>Gemeinsames Sonntagsfrühstück</p>
 </div>
 
-<!-- 🔁 MODUS -->
-<div class="mode-switch">
-  <button onclick="showOrder()">🏠 Bestellen</button>
-  <button onclick="showBaker()">🧺 Bäcker-Modus</button>
-</div>
+<input id="family" placeholder="Familienname">
 
-<!-- ===== BESTELLEN ===== -->
-<div id="orderView">
-  <input id="family" placeholder="Familienname">
+<div id="iconPicker"></div>
 
-  <div id="iconPicker"></div>
+<div id="products"></div>
 
-  <div id="products"></div>
+<button id="saveBtn">🛒 Bestellung speichern</button>
 
-  <!-- 📝 BEMERKUNG -->
-  <textarea id="note" placeholder="Bemerkung (z. B. 3 Eier, Milch, Wünsche)"></textarea>
+<hr>
 
-  <button id="saveBtn">🛒 Bestellung speichern</button>
-
-  <hr>
-  <h2>📋 Bestellungen</h2>
-  <div id="overview"></div>
-</div>
-
-<!-- ===== 🧺 BÄCKER ===== -->
-<div id="bakerView" style="display:none">
-  <h2>🧺 Bäcker-Modus</h2>
-  <div id="bakerList"></div>
-</div>
+<h2>📋 Bestellungen</h2>
+<div id="overview"></div>
 
 <!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
