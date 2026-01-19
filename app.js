@@ -31,7 +31,7 @@ const cart = {};
 const productsEl = document.getElementById("products");
 const overviewEl = document.getElementById("overview");
 
-/******** PRODUKTE ANZEIGEN ********/
+/******** PRODUKTE ********/
 function renderProducts() {
   productsEl.innerHTML = "";
 
@@ -77,31 +77,46 @@ function renderProducts() {
   }
 }
 
-/******** BESTELLUNG ********/
+/******** BESTELLUNG SPEICHERN ********/
 document.getElementById("saveBtn").onclick = () => {
   const family = document.getElementById("family").value;
   if (!family) return alert("Familienname fehlt");
+
   db.ref("orders/" + family).set(cart);
 };
 
-/******** LIVE ÜBERSICHT ********/
+/******** 🔴 LIVE + LÖSCHEN ********/
 db.ref("orders").on("value", snap => {
   overviewEl.innerHTML = "";
+
   snap.forEach(c => {
     const box = document.createElement("div");
     box.className = "overview-box";
+
     box.innerHTML = `<b>${c.key}</b>`;
+
     const items = c.val();
     for (let i in items) {
       if (items[i] > 0) {
         box.innerHTML += `<br>${i}: ${items[i]}×`;
       }
     }
+
+    const del = document.createElement("button");
+    del.textContent = "❌ Bestellung löschen";
+    del.className = "delete-btn";
+    del.onclick = () => {
+      if (confirm("Bestellung wirklich löschen?")) {
+        db.ref("orders/" + c.key).remove();
+      }
+    };
+
+    box.appendChild(del);
     overviewEl.appendChild(box);
   });
 });
 
-/******** 🚗💨 ABHOLER LOGIK ********/
+/******** 🚗💨 ABHOLER ********/
 const pickupInput = document.getElementById("pickupInput");
 const savePickup = document.getElementById("savePickup");
 const clearPickup = document.getElementById("clearPickup");
