@@ -42,3 +42,43 @@ const PRODUCTS = {
     "Kleines Landbrot"
   ]
 };
+const cart = {};
+
+function renderProducts() {
+  const container = document.getElementById("products");
+
+  // 🔴 WICHTIGER SCHUTZ
+  if (!container) {
+    console.error("Element #products nicht gefunden");
+    return;
+  }
+
+  container.innerHTML = "";
+
+  for (let category in PRODUCTS) {
+    const h3 = document.createElement("h3");
+    h3.textContent = category;
+    container.appendChild(h3);
+
+    PRODUCTS[category].forEach(product => {
+      const row = document.createElement("div");
+      row.className = "product";
+
+      const label = document.createElement("span");
+      label.textContent = product;
+
+      const input = document.createElement("input");
+      input.type = "number";
+      input.min = 0;
+      input.value = 0;
+
+      input.oninput = () => {
+        cart[product] = parseInt(input.value) || 0;
+      };
+
+      row.appendChild(label);
+      row.appendChild(input);
+      container.appendChild(row);
+    });
+  }
+}
