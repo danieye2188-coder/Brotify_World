@@ -6,12 +6,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="style.css">
 
-  <!-- schöne Schrift -->
   <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Nunito:wght@700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-<!-- 🚗💨 ABHOLER -->
+<!-- 🚗💨 Abholer -->
 <div id="pickupBox">
   <span id="pickupLabel">🚗💨</span>
   <input id="pickupInput" placeholder="Abholer Name">
@@ -19,16 +18,16 @@
   <button id="clearPickup">✖</button>
 </div>
 
-<!-- 🌙 HEADER -->
+<!-- 🌙 Header -->
 <div class="header-moon">
   <h1>Brotify</h1>
   <p>Gemeinsames Sonntagsfrühstück</p>
 </div>
 
-<!-- 🔁 MODUS -->
+<!-- Modus -->
 <div class="mode-switch">
   <button onclick="showOrder()">🏠 Bestellen</button>
-  <button onclick="showBaker()">🧺 Bäcker-Modus</button>
+  <button onclick="showShop()">🧾 Einkaufszettel</button>
 </div>
 
 <!-- ===== BESTELLEN ===== -->
@@ -39,20 +38,25 @@
 
   <div id="products"></div>
 
-  <!-- 📝 BEMERKUNG -->
-  <textarea id="note" placeholder="Bemerkung (z. B. 3 Eier, Milch, Wünsche)"></textarea>
+  <textarea id="note" placeholder="Bemerkung (z. B. 3 Eier, Milch)"></textarea>
 
   <button id="saveBtn">🛒 Bestellung speichern</button>
 
   <hr>
-  <h2>📋 Bestellungen</h2>
+  <h2>📋 Aktuelle Bestellungen</h2>
   <div id="overview"></div>
 </div>
 
-<!-- ===== 🧺 BÄCKER ===== -->
-<div id="bakerView" style="display:none">
-  <h2>🧺 Bäcker-Modus</h2>
-  <div id="bakerList"></div>
+<!-- ===== 🧾 EINKAUFSZETTEL ===== -->
+<div id="shopView" style="display:none">
+  <h2>🧾 Einkaufszettel</h2>
+
+  <h3>🔢 Gesamtmenge</h3>
+  <div id="totals"></div>
+
+  <hr>
+  <h3>👨‍👩‍👧 Bestellungen nach Familien</h3>
+  <div id="families"></div>
 </div>
 
 <!-- Firebase -->
