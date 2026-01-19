@@ -10,3 +10,35 @@ var firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
+const PRODUCTS = {
+  "Weckle & Brötchen": [
+    "Laugenweckle",
+    "Körnerweckle",
+    "Doppelweckle",
+    "Seelen",
+    "Sonnenblumeweckle",
+    "Kürbisweckle",
+    "Dinkelweckle",
+    "Vollkornweckle",
+    "Mehrkornweckle",
+    "Roggenweckle"
+  ],
+
+  "Laugengebäck & Laugenecken": [
+    "Laugenstange",
+    "Laugenhörnchen",
+    "Laugenecke klassisch",
+    "Laugenecke mit Körnern",
+    "Brezel"
+  ],
+
+  "Croissants & süßes Gebäck": [
+    "Buttercroissant",
+    "Schokocroissant"
+  ],
+
+  "Brote & Zopf": [
+    "Zopf",
+    "Kleines Landbrot"
+  ]
+};
