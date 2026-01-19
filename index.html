@@ -13,39 +13,37 @@
   <span id="pickupDisplay"></span>
 </div>
 
-<!-- ABHOLER SETZEN -->
+<!-- ABHOLER -->
 <div id="pickupBox">
   <input id="pickupInput" placeholder="👤🚗 Wer holt die Bestellung ab?">
-  <button onclick="savePickup()">Abholer speichern</button>
+  <button id="savePickupBtn">Abholer speichern</button>
 </div>
 
-<!-- UMSCHALTEN -->
+<!-- SWITCH -->
 <div class="switch">
-  <button onclick="showOrderView()">🏠 Bestellen</button>
-  <button onclick="showBakerView()">🧺 Bäcker</button>
+  <button id="orderBtn">🏠 Bestellen</button>
+  <button id="bakerBtn">🧺 Bäcker</button>
 </div>
 
-<!-- ===== BESTELLEN ===== -->
+<!-- BESTELLEN -->
 <div id="orderView">
-
   <h1>🍞 Brotify</h1>
 
-  <input id="family" placeholder="Familienname">
+  <input id="familyInput" placeholder="Familienname">
 
   <div id="iconPicker"></div>
 
-  <textarea id="note" placeholder="Bemerkung"></textarea>
+  <textarea id="noteInput" placeholder="Bemerkung"></textarea>
 
   <div id="products"></div>
 
-  <button onclick="submitOrder()">🛒 Bestellung speichern</button>
+  <button id="saveOrderBtn">🛒 Bestellung speichern</button>
 
   <hr>
   <div id="overview"></div>
-
 </div>
 
-<!-- ===== BÄCKER ===== -->
+<!-- BÄCKER -->
 <div id="bakerView" style="display:none">
   <h2>🧺 Bäcker-Übersicht</h2>
   <p id="pickupBaker"></p>
