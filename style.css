@@ -1,18 +1,28 @@
 body {
   font-family: Arial, sans-serif;
-  max-width: 600px;
+  max-width: 700px;
   margin: auto;
   padding: 10px;
 }
 
-input, button {
+input, textarea, button {
   width: 100%;
   padding: 10px;
-  margin: 5px 0;
+  margin: 6px 0;
 }
 
-li {
-  background: #eee;
-  margin: 5px 0;
-  padding: 8px;
+h3 {
+  margin-top: 20px;
+}
+
+.product {
+  display: flex;
+  justify-content: space-between;
+  margin: 4px 0;
+}
+
+.overview-box {
+  background: #f4f4f4;
+  padding: 10px;
+  margin: 10px 0;
 }
