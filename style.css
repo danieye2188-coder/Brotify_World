@@ -1,54 +1,60 @@
-/* 🌅 Hintergrundbild – Sonntagsfrühstück */
 body {
   font-family: Arial, sans-serif;
   max-width: 900px;
   margin: auto;
   padding: 16px;
-
-  background-image: url("background.jpg");
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
+  background: #fff6e5;
 }
 
-/* 🧾 Karten-Look für Inhalte */
-body > * {
-  background: rgba(255, 255, 255, 0.93);
-  border-radius: 14px;
-  padding: 14px;
-  margin-bottom: 14px;
-}
-
-/* 🥖 Produktzeilen */
-.product {
+.topbar {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
+  justify-content: flex-end;
+  font-weight: bold;
 }
 
-/* ➕➖ Buttons */
-.product button {
-  padding: 4px 10px;
-  font-size: 18px;
-  background: #c58b2b;
-  color: white;
-  border: none;
-  border-radius: 6px;
+.switch button {
+  margin-right: 6px;
 }
 
-/* 📦 Übersicht */
-.overview-box {
-  background: #f4f4f4;
-  padding: 10px;
-  margin-top: 10px;
-  border-radius: 8px;
-}
-
-/* 📝 Eingabefelder */
 input, textarea, button {
   width: 100%;
   padding: 10px;
   margin: 6px 0;
   font-size: 16px;
+}
+
+.product {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.pm {
+  width: 40px;
+  height: 40px;
+  font-size: 22px;
+}
+
+.amount {
+  width: 30px;
+  text-align: center;
+}
+
+.icon {
+  font-size: 26px;
+  cursor: pointer;
+  margin: 4px;
+}
+
+.icon.selected {
+  outline: 2px solid #c58b2b;
+  border-radius: 6px;
+}
+
+.overview-box {
+  background: #f3f3f3;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 8px;
 }
