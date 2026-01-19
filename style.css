@@ -53,7 +53,7 @@ body > * {
   outline: 2px solid #c58b2b;
 }
 
-/* Produkte */
+/* Produkte sauber in Reihe */
 .product {
   display: grid;
   grid-template-columns: 1fr 40px 30px 40px;
