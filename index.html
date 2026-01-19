@@ -4,54 +4,55 @@
   <meta charset="UTF-8">
   <title>Brotify 🍞</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <!-- CSS -->
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<!-- Umschalt-Buttons -->
-<button onclick="showOrderView()">🏠 Bestellen</button>
-<button onclick="showBakerView()">🧺 Bäcker-Modus</button>
+<!-- Kopfzeile -->
+<div class="topbar">
+  <span id="pickupDisplay"></span>
+</div>
 
-<!-- ===== BESTELL-MASKE ===== -->
+<!-- Umschalten -->
+<div class="switch">
+  <button onclick="showOrderView()">🏠 Bestellen</button>
+  <button onclick="showBakerView()">🧺 Bäcker</button>
+</div>
+
+<!-- ===== BESTELLEN ===== -->
 <div id="orderView">
 
   <h1>🍞 Brotify</h1>
-  <p>Gemeinsames Sonntagsfrühstück planen</p>
 
   <input id="family" placeholder="Familienname">
+
+  <!-- ICON AUSWAHL -->
+  <div id="iconPicker"></div>
+
+  <!-- ABHOLER (verschwindet später) -->
   <input id="pickup" placeholder="Wer holt die Bestellung ab?">
+
   <textarea id="note" placeholder="Bemerkung"></textarea>
 
-  <!-- 🔴 HIER erscheinen die Artikel -->
   <div id="products"></div>
 
   <button onclick="submitOrder()">🛒 Bestellung speichern</button>
 
   <hr>
-
-  <h2>📋 Bestellungen</h2>
   <div id="overview"></div>
 
 </div>
 
-<!-- ===== BÄCKER-MASKE ===== -->
+<!-- ===== BÄCKER ===== -->
 <div id="bakerView" style="display:none">
-
-  <h1>🧺 Bäcker-Übersicht</h1>
-  <p>Gesamtmenge & Abhaken</p>
-
+  <h2>🧺 Bäcker-Übersicht</h2>
   <div id="bakerList"></div>
-
 </div>
 
-<!-- 🔥 Firebase MUSS VOR app.js kommen -->
+<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
-<!-- 🧠 App-Logik -->
 <script src="app.js"></script>
-
 </body>
 </html>
