@@ -171,3 +171,8 @@ textarea {
   text-decoration: line-through;
   color: #999;
 }
+/* 📱 Fallback für Mobile (kein :has Support) */
+.shopping-row.checked .text {
+  text-decoration: line-through;
+  color: #999;
+}
