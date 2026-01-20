@@ -7,6 +7,12 @@ firebase.initializeApp({
 });
 const db = firebase.database();
 
+/******** DOM ********/
+const productsEl = document.getElementById("products");
+const ordersEl = document.getElementById("orders");
+const shoppingEl = document.getElementById("shoppingList");
+const familyInput = document.getElementById("family");
+
 /******** GROUP ********/
 let groupId = null;
 
@@ -14,7 +20,7 @@ let groupId = null;
 const ICONS = ["🦊","🐻","🦄","🍄","👻","🐸","🐼","🐱","🐶"];
 let selectedIcon = ICONS[0];
 
-/******** PRODUKTE – UNVERÄNDERT ********/
+/******** PRODUKTE (ORIGINAL) ********/
 const PRODUCTS = {
   "Weckle & Brötchen": [
     "Laugenweckle","Körnerweckle","Doppelweckle","Seelen",
@@ -51,13 +57,15 @@ function renderIcons() {
   });
 }
 
-/******** PRODUKTE – WIE DEIN ORIGINAL ********/
+/******** PRODUKTE ********/
 function renderProducts() {
-  products.innerHTML = "";
+  productsEl.innerHTML = "";
   cart = {};
 
   for (let cat in PRODUCTS) {
-    products.innerHTML += `<h3>${cat}</h3>`;
+    const h = document.createElement("h3");
+    h.textContent = cat;
+    productsEl.appendChild(h);
 
     PRODUCTS[cat].forEach(p => {
       cart[p] = 0;
@@ -93,15 +101,15 @@ function renderProducts() {
       };
 
       row.append(name, minus, amt, plus);
-      products.appendChild(row);
+      productsEl.appendChild(row);
     });
   }
 }
 
-/******** ABHOLER → GRUPPE STARTEN ********/
+/******** ABHOLER ********/
 savePickup.onclick = async () => {
   if (!pickupInput.value || !pickupTime.value) {
-    alert("Abholer + Zeit eingeben");
+    alert("Abholer & Zeit eingeben");
     return;
   }
 
@@ -109,8 +117,7 @@ savePickup.onclick = async () => {
     groupId = Math.random().toString(36).substring(2, 7).toUpperCase();
     await db.ref("groups/" + groupId).set({ createdAt: Date.now() });
 
-    const link =
-      location.origin + location.pathname + "?group=" + groupId;
+    const link = location.origin + location.pathname + "?group=" + groupId;
     inviteLink.value = link;
     inviteBox.style.display = "block";
   }
@@ -120,59 +127,64 @@ savePickup.onclick = async () => {
     pickupAt: new Date(pickupTime.value).getTime()
   });
 
+  pickupLabel.textContent = "🚗💨 " + pickupInput.value;
   listenOrders();
 };
 
-/******** BESTELLUNG SPEICHERN ********/
+/******** BESTELLUNG ********/
 saveBtn.onclick = () => {
-  if (!groupId) {
-    alert("Warten bis Abholer startet");
-    return;
-  }
-  if (!family.value) return alert("Name fehlt");
+  if (!groupId) return alert("Warten bis Abholer startet");
+  if (!familyInput.value) return alert("Name fehlt");
 
   db.ref(`groups/${groupId}/currentRound/orders`).push({
-    household: family.value,
+    household: familyInput.value,
     icon: selectedIcon,
     items: cart
   });
 
-  family.value = "";
+  familyInput.value = "";
   renderProducts();
 };
 
-/******** EINKAUFSZETTEL / LIVE ********/
+/******** BESTELLUNGEN + EINKAUFSZETTEL ********/
 function listenOrders() {
-  db.ref(`groups/${groupId}/currentRound/orders`)
-    .on("value", snap => {
-      overview.innerHTML = "";
+  db.ref(`groups/${groupId}/currentRound/orders`).on("value", snap => {
+    ordersEl.innerHTML = "";
+    shoppingEl.innerHTML = "";
 
-      snap.forEach(c => {
-        const d = c.val();
-        const box = document.createElement("div");
-        box.className = "overview-box";
+    const sum = {};
 
-        box.innerHTML = `${d.icon} <b>${d.household}</b>`;
+    snap.forEach(o => {
+      const d = o.val();
 
-        for (let i in d.items) {
-          if (d.items[i] > 0) {
-            box.innerHTML += `<br>${i}: ${d.items[i]}×`;
-          }
+      const box = document.createElement("div");
+      box.className = "box";
+      box.innerHTML = `${d.icon} <b>${d.household}</b>`;
+
+      for (let i in d.items) {
+        if (d.items[i] > 0) {
+          box.innerHTML += `<br>${i}: ${d.items[i]}×`;
+          sum[i] = (sum[i] || 0) + d.items[i];
         }
+      }
 
-        const del = document.createElement("button");
-        del.textContent = "❌ Abgehakt / löschen";
-        del.className = "delete-btn";
-        del.onclick = () => {
-          if (confirm("Bestellung abhaken?")) {
-            db.ref(`groups/${groupId}/currentRound/orders/${c.key}`).remove();
-          }
-        };
-
-        box.appendChild(del);
-        overview.appendChild(box);
-      });
+      ordersEl.appendChild(box);
     });
+
+    for (let item in sum) {
+      const row = document.createElement("div");
+      row.className = "box";
+      row.innerHTML = `<b>${item}</b>: ${sum[item]}×`;
+
+      const btn = document.createElement("button");
+      btn.textContent = "✔ abgehakt";
+      btn.className = "check";
+      btn.onclick = () => row.classList.add("done");
+
+      row.appendChild(btn);
+      shoppingEl.appendChild(row);
+    }
+  });
 }
 
 /******** START ********/
