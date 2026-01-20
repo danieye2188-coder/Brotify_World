@@ -8,11 +8,15 @@ var firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-/******** 🧩 ICONS ********/
-const ICONS = ["🦊","🐻","🦄","🍄","👻","🐸","🐼","🐱","🐶","🦉","🐯","🐷","🐮","🐰","🐵"];
-let selectedIcon = ICONS[0];
+/******** STATE ********/
+let cart = {};
+let selectedIcon = "🦊";
+let currentPickup = "";
+let editOrderId = null;
 
-/******** 🥖 PRODUKTE ********/
+/******** CONSTANTS ********/
+const ICONS = ["🦊","🐻","🦄","🍄","👻","🐸","🐼","🐱","🐶","🦉","🐯","🐷","🐮","🐰","🐵"];
+
 const PRODUCTS = {
   "Weckle & Brötchen": [
     "Laugenweckle","Körnerweckle","Doppelweckle","Seelen",
@@ -31,9 +35,6 @@ const PRODUCTS = {
   ]
 };
 
-let cart = {};
-let currentPickup = "";
-
 /******** DOM ********/
 const productsEl = document.getElementById("products");
 const overviewEl = document.getElementById("overview");
@@ -42,17 +43,18 @@ const nameInput = document.getElementById("family");
 const remarkInput = document.getElementById("remark");
 const pickupInline = document.getElementById("pickupInline");
 const pickupInput = document.getElementById("pickupInput");
+const saveBtn = document.getElementById("saveBtn");
 
-/******** 🧩 ICON PICKER ********/
-function renderIcons() {
+/******** ICON PICKER ********/
+function renderIcons(activeIcon = selectedIcon) {
   const picker = document.getElementById("iconPicker");
   picker.innerHTML = "";
 
-  ICONS.forEach((icon, index) => {
+  ICONS.forEach(icon => {
     const span = document.createElement("span");
     span.textContent = icon;
     span.className = "icon";
-    if (index === 0) span.classList.add("selected");
+    if (icon === activeIcon) span.classList.add("selected");
 
     span.onclick = () => {
       document.querySelectorAll(".icon").forEach(i => i.classList.remove("selected"));
@@ -62,12 +64,10 @@ function renderIcons() {
 
     picker.appendChild(span);
   });
-
-  selectedIcon = ICONS[0];
 }
 
-/******** 🛒 PRODUKTE ********/
-function renderProducts() {
+/******** PRODUKTE ********/
+function renderProducts(items = {}) {
   productsEl.innerHTML = "";
   cart = {};
 
@@ -77,7 +77,7 @@ function renderProducts() {
     productsEl.appendChild(h);
 
     PRODUCTS[cat].forEach(p => {
-      cart[p] = 0;
+      cart[p] = items[p] || 0;
 
       const row = document.createElement("div");
       row.className = "product";
@@ -91,7 +91,7 @@ function renderProducts() {
 
       const amt = document.createElement("div");
       amt.className = "amount";
-      amt.textContent = "0";
+      amt.textContent = cart[p];
 
       const plus = document.createElement("button");
       plus.textContent = "+";
@@ -115,32 +115,44 @@ function renderProducts() {
   }
 }
 
-/******** 💾 SPEICHERN ********/
-document.getElementById("saveBtn").onclick = () => {
+/******** SPEICHERN / UPDATE ********/
+saveBtn.onclick = () => {
   const name = nameInput.value.trim();
   if (!name) return alert("Bitte deinen Namen eingeben");
 
-  db.ref("orders").push({
+  const data = {
     name,
     icon: selectedIcon,
     remark: remarkInput.value.trim(),
     items: cart,
     time: Date.now()
-  });
+  };
 
-  nameInput.value = "";
-  remarkInput.value = "";
-  renderProducts();
-  renderIcons();
+  if (editOrderId) {
+    db.ref("orders/" + editOrderId).update(data);
+  } else {
+    db.ref("orders").push(data);
+  }
+
+  resetForm();
 };
 
-/******** 🔴 LIVE ÜBERSICHT + EINKAUFSZETTEL ********/
+function resetForm() {
+  editOrderId = null;
+  saveBtn.textContent = "🛒 Bestellung speichern";
+  nameInput.value = "";
+  remarkInput.value = "";
+  selectedIcon = ICONS[0];
+  renderIcons();
+  renderProducts();
+}
+
+/******** LIVE ÜBERSICHT ********/
 db.ref("orders").on("value", snap => {
   overviewEl.innerHTML = "";
   shoppingListEl.innerHTML = "";
 
   const totalItems = {};
-  const remarks = [];
 
   snap.forEach(c => {
     const d = c.val();
@@ -148,10 +160,8 @@ db.ref("orders").on("value", snap => {
     const box = document.createElement("div");
     box.className = "overview-box";
 
-    box.innerHTML = `
-      ${d.icon} <b>${d.name}</b>
-      ${d.remark ? `<div class="remark">📝 ${d.remark}</div>` : ""}
-    `;
+    box.innerHTML = `${d.icon} <b>${d.name}</b>
+      ${d.remark ? `<div class="remark">📝 ${d.remark}</div>` : ""}`;
 
     for (let i in d.items) {
       if (d.items[i] > 0) {
@@ -160,10 +170,21 @@ db.ref("orders").on("value", snap => {
       }
     }
 
-    if (d.remark) remarks.push(`📝 ${d.name}: ${d.remark}`);
+    const edit = document.createElement("button");
+    edit.textContent = "✏️ Bearbeiten";
+    edit.onclick = () => {
+      editOrderId = c.key;
+      nameInput.value = d.name;
+      remarkInput.value = d.remark || "";
+      selectedIcon = d.icon;
+      renderIcons(d.icon);
+      renderProducts(d.items);
+      saveBtn.textContent = "✏️ Bestellung aktualisieren";
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    };
 
     const del = document.createElement("button");
-    del.textContent = "❌ Bestellung löschen";
+    del.textContent = "❌ Löschen";
     del.className = "delete-btn";
     del.onclick = () => {
       if (confirm("Bestellung wirklich löschen?")) {
@@ -171,7 +192,7 @@ db.ref("orders").on("value", snap => {
       }
     };
 
-    box.appendChild(del);
+    box.append(edit, del);
     overviewEl.appendChild(box);
   });
 
@@ -179,28 +200,20 @@ db.ref("orders").on("value", snap => {
     shoppingListEl.innerHTML +=
       `<div class="shopping-row"><label><input type="checkbox"> ${totalItems[item]}× ${item}</label></div>`;
   }
-
-  if (remarks.length) {
-    shoppingListEl.innerHTML += "<hr>";
-    remarks.forEach(r => {
-      shoppingListEl.innerHTML +=
-        `<div class="shopping-row"><label><input type="checkbox"> ${r}</label></div>`;
-    });
-  }
 });
 
-/******** 🚗💨 ABHOLER (GLOBAL) ********/
+/******** ABHOLER ********/
 db.ref("meta/abholer").on("value", snap => {
-  currentPickup = snap.val() || "";
-  pickupInline.textContent = currentPickup
-    ? `🚗💨 Abholer: ${currentPickup}`
+  pickupInline.textContent = snap.val()
+    ? `🚗💨 Abholer: ${snap.val()}`
     : "🚗💨 kein Abholer";
 });
 
 document.getElementById("savePickup").onclick = () => {
-  if (!pickupInput.value) return;
-  db.ref("meta/abholer").set(pickupInput.value);
-  pickupInput.value = "";
+  if (pickupInput.value) {
+    db.ref("meta/abholer").set(pickupInput.value);
+    pickupInput.value = "";
+  }
 };
 
 document.getElementById("clearPickup").onclick = () => {
