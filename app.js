@@ -34,6 +34,7 @@ const PRODUCTS = {
 let cart = {};
 let currentPickup = "";
 
+/******** DOM ********/
 const productsEl = document.getElementById("products");
 const overviewEl = document.getElementById("overview");
 const shoppingListEl = document.getElementById("shoppingList");
@@ -114,7 +115,7 @@ function renderProducts() {
   }
 }
 
-/******** 💾 BESTELLUNG SPEICHERN ********/
+/******** 💾 SPEICHERN ********/
 document.getElementById("saveBtn").onclick = () => {
   const name = nameInput.value.trim();
   if (!name) return alert("Bitte deinen Namen eingeben");
@@ -140,9 +141,11 @@ db.ref("orders").on("value", snap => {
   shoppingListEl.innerHTML = "";
 
   const totalItems = {};
+  const remarks = [];
 
   snap.forEach(c => {
     const d = c.val();
+
     const box = document.createElement("div");
     box.className = "overview-box";
 
@@ -159,6 +162,8 @@ db.ref("orders").on("value", snap => {
       }
     }
 
+    if (d.remark) remarks.push(`📝 ${d.name}: ${d.remark}`);
+
     const del = document.createElement("button");
     del.textContent = "❌ Bestellung löschen";
     del.className = "delete-btn";
@@ -173,10 +178,16 @@ db.ref("orders").on("value", snap => {
   });
 
   for (let item in totalItems) {
-    const row = document.createElement("div");
-    row.className = "shopping-row";
-    row.innerHTML = `<label><input type="checkbox"> ${item}: <b>${totalItems[item]}×</b></label>`;
-    shoppingListEl.appendChild(row);
+    shoppingListEl.innerHTML +=
+      `<div class="shopping-row"><label><input type="checkbox"> ${totalItems[item]}× ${item}</label></div>`;
+  }
+
+  if (remarks.length) {
+    shoppingListEl.innerHTML += "<hr>";
+    remarks.forEach(r => {
+      shoppingListEl.innerHTML +=
+        `<div class="shopping-row"><label><input type="checkbox"> ${r}</label></div>`;
+    });
   }
 });
 
