@@ -123,11 +123,9 @@ saveBtn.onclick = () => {
     time: Date.now()
   };
 
-  if (editOrderId) {
-    db.ref("orders/" + editOrderId).set(data);
-  } else {
-    db.ref("orders").push(data);
-  }
+  editOrderId
+    ? db.ref("orders/" + editOrderId).set(data)
+    : db.ref("orders").push(data);
 
   resetForm();
 };
@@ -155,6 +153,7 @@ db.ref("orders").on("value", snap => {
 
     const box = document.createElement("div");
     box.className = "overview-box";
+
     box.innerHTML = `
       ${d.icon} <b>${d.name}</b>
       ${d.remark ? `<div class="remark">📝 ${d.remark}</div>` : ""}
@@ -169,9 +168,13 @@ db.ref("orders").on("value", snap => {
 
     if (d.remark) remarks.push(`📝 ${d.name}: ${d.remark}`);
 
-    /* ✏️ BEARBEITEN */
+    /* 🔧 BUTTON-LEISTE (NEU) */
+    const actions = document.createElement("div");
+    actions.className = "order-actions";
+
     const editBtn = document.createElement("button");
     editBtn.textContent = "✏️ Bearbeiten";
+    editBtn.className = "edit-btn";
     editBtn.onclick = () => {
       editOrderId = c.key;
       nameInput.value = d.name;
@@ -183,17 +186,17 @@ db.ref("orders").on("value", snap => {
       window.scrollTo({ top: 0, behavior: "smooth" });
     };
 
-    /* ❌ LÖSCHEN */
     const delBtn = document.createElement("button");
-    delBtn.className = "delete-btn";
     delBtn.textContent = "❌ Bestellung löschen";
+    delBtn.className = "delete-btn";
     delBtn.onclick = () => {
       if (confirm("Bestellung wirklich löschen?")) {
         db.ref("orders/" + c.key).remove();
       }
     };
 
-    box.append(editBtn, delBtn);
+    actions.appendChild(editBtn);
+    box.append(actions, delBtn);
     overviewEl.appendChild(box);
   });
 
@@ -216,15 +219,13 @@ db.ref("orders").on("value", snap => {
   });
 });
 
-/******** 🚗💨 ABHOLER – FINAL ********/
+/******** 🚗💨 ABHOLER ********/
 db.ref("meta/abholer").on("value", snap => {
-  const val = snap.val();
-  pickupInline.textContent = val
-    ? `🚗💨 Abholer: ${val}`
+  pickupInline.textContent = snap.val()
+    ? `🚗💨 Abholer: ${snap.val()}`
     : "🚗💨 kein Abholer";
 });
 
-/* ✅ SPEICHERN */
 document.getElementById("savePickup").onclick = () => {
   const val = pickupInput.value.trim();
   if (!val) return;
@@ -232,7 +233,6 @@ document.getElementById("savePickup").onclick = () => {
   pickupInput.value = "";
 };
 
-/* ❌ LÖSCHEN */
 document.getElementById("clearPickup").onclick = () => {
   db.ref("meta/abholer").remove();
 };
