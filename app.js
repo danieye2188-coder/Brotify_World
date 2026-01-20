@@ -8,11 +8,11 @@ var firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-/******** 🧩 ICONS ********/
+/******** ICONS ********/
 const ICONS = ["🦊","🐻","🦄","🍄","👻","🐸","🐼","🐱","🐶","🦉","🐯","🐷","🐮","🐰","🐵"];
 let selectedIcon = ICONS[0];
 
-/******** 🥖 PRODUKTE ********/
+/******** PRODUKTE ********/
 const PRODUCTS = {
   "Weckle & Brötchen": [
     "Laugenweckle","Körnerweckle","Doppelweckle","Seelen",
@@ -32,11 +32,12 @@ const PRODUCTS = {
 };
 
 let cart = {};
+
 const productsEl = document.getElementById("products");
 const overviewEl = document.getElementById("overview");
 const familyInput = document.getElementById("family");
 
-/******** 🧩 ICON PICKER ********/
+/******** ICON PICKER ********/
 function renderIcons() {
   const picker = document.getElementById("iconPicker");
   picker.innerHTML = "";
@@ -55,11 +56,9 @@ function renderIcons() {
 
     picker.appendChild(span);
   });
-
-  selectedIcon = ICONS[0];
 }
 
-/******** 🛒 PRODUKTE ********/
+/******** PRODUKTE ********/
 function renderProducts() {
   productsEl.innerHTML = "";
   cart = {};
@@ -83,8 +82,8 @@ function renderProducts() {
       minus.className = "pm";
 
       const amt = document.createElement("div");
-      amt.className = "amount";
       amt.textContent = "0";
+      amt.className = "amount";
 
       const plus = document.createElement("button");
       plus.textContent = "+";
@@ -108,10 +107,10 @@ function renderProducts() {
   }
 }
 
-/******** 💾 BESTELLUNG SPEICHERN + RESET ********/
+/******** SPEICHERN ********/
 document.getElementById("saveBtn").onclick = () => {
   const family = familyInput.value.trim();
-  if (!family) return alert("Familienname fehlt");
+  if (!family) return alert("Name fehlt");
 
   db.ref("orders/" + family).set({
     family,
@@ -119,13 +118,12 @@ document.getElementById("saveBtn").onclick = () => {
     items: cart
   });
 
-  /* 🔄 RESET NACH SPEICHERN */
-  familyInput.value = "";      // Name leeren
-  renderProducts();            // Mengen auf 0
-  renderIcons();               // Icon zurücksetzen
+  familyInput.value = "";
+  renderProducts();
+  renderIcons();
 };
 
-/******** 🔴 LIVE + ❌ LÖSCHEN ********/
+/******** LIVE BESTELLUNGEN ********/
 db.ref("orders").on("value", snap => {
   overviewEl.innerHTML = "";
 
@@ -156,10 +154,9 @@ db.ref("orders").on("value", snap => {
   });
 });
 
-/******** 🚗💨 ABHOLER (LIVE) ********/
+/******** ABHOLER ********/
 const pickupInput = document.getElementById("pickupInput");
 const pickupLabel = document.getElementById("pickupLabel");
-
 const pickupTop = document.getElementById("currentPickupTop");
 const pickupBottom = document.getElementById("currentPickupBottom");
 
@@ -182,8 +179,9 @@ db.ref("meta/abholer").on("value", snap => {
 });
 
 document.getElementById("savePickup").onclick = () => {
-  if (!pickupInput.value) return;
-  db.ref("meta/abholer").set(pickupInput.value);
+  if (pickupInput.value) {
+    db.ref("meta/abholer").set(pickupInput.value);
+  }
 };
 
 document.getElementById("clearPickup").onclick = () => {
@@ -191,26 +189,5 @@ document.getElementById("clearPickup").onclick = () => {
 };
 
 /******** START ********/
-/******** 🚗💨 ABHOLER FIX OBEN + UNTEN ********/
-const pickupTop = document.getElementById("currentPickupTop");
-const pickupBottom = document.getElementById("currentPickupBottom");
-
-db.ref("meta/abholer").on("value", snap => {
-  const name = snap.val();
-
-  if (name) {
-    const text = `🚗💨 Abholer: ${name}`;
-
-    pickupTop.textContent = text;
-    pickupBottom.textContent = text;
-
-    pickupTop.style.display = "block";
-    pickupBottom.style.display = "block";
-  } else {
-    pickupTop.style.display = "none";
-    pickupBottom.style.display = "none";
-  }
-});
-
 renderIcons();
 renderProducts();
