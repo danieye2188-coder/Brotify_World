@@ -8,14 +8,13 @@ firebase.initializeApp({
 const db = firebase.database();
 
 /******** GROUP ********/
-let groupId =
-  new URLSearchParams(window.location.search).get("group") || null;
+let groupId = null;
 
 /******** ICONS ********/
 const ICONS = ["🦊","🐻","🦄","🍄","👻","🐸","🐼","🐱","🐶"];
 let selectedIcon = ICONS[0];
 
-/******** PRODUKTE (DEIN VOLLSTÄNDIGES SORTIMENT) ********/
+/******** PRODUKTE – UNVERÄNDERT ********/
 const PRODUCTS = {
   "Weckle & Brötchen": [
     "Laugenweckle","Körnerweckle","Doppelweckle","Seelen",
@@ -52,161 +51,128 @@ function renderIcons() {
   });
 }
 
-/******** PRODUKTE ********/
+/******** PRODUKTE – WIE DEIN ORIGINAL ********/
 function renderProducts() {
   products.innerHTML = "";
   cart = {};
+
   for (let cat in PRODUCTS) {
     products.innerHTML += `<h3>${cat}</h3>`;
+
     PRODUCTS[cat].forEach(p => {
       cart[p] = 0;
+
       const row = document.createElement("div");
       row.className = "product";
-      row.innerHTML = `
-        <div>${p}</div>
-        <button class="pm">−</button>
-        <div class="amount">0</div>
-        <button class="pm">+</button>
-      `;
-      const [minus, amt, plus] = row.querySelectorAll("button, .amount");
-      minus.onclick = () => { if (cart[p] > 0) amt.textContent = --cart[p]; };
-      plus.onclick = () => amt.textContent = ++cart[p];
+
+      const name = document.createElement("div");
+      name.textContent = p;
+
+      const minus = document.createElement("button");
+      minus.textContent = "−";
+      minus.className = "pm";
+
+      const amt = document.createElement("div");
+      amt.className = "amount";
+      amt.textContent = "0";
+
+      const plus = document.createElement("button");
+      plus.textContent = "+";
+      plus.className = "pm";
+
+      minus.onclick = () => {
+        if (cart[p] > 0) {
+          cart[p]--;
+          amt.textContent = cart[p];
+        }
+      };
+
+      plus.onclick = () => {
+        cart[p]++;
+        amt.textContent = cart[p];
+      };
+
+      row.append(name, minus, amt, plus);
       products.appendChild(row);
     });
   }
 }
 
-/******** ABHOLER → GRUPPE ERSTELLEN ********/
+/******** ABHOLER → GRUPPE STARTEN ********/
 savePickup.onclick = async () => {
-  const name = pickupInput.value.trim();
-  const time = pickupTime.value;
-
-  if (!name || !time) {
-    alert("Abholer & Abholzeit eingeben");
+  if (!pickupInput.value || !pickupTime.value) {
+    alert("Abholer + Zeit eingeben");
     return;
   }
 
   if (!groupId) {
     groupId = Math.random().toString(36).substring(2, 7).toUpperCase();
-    await db.ref(`groups/${groupId}`).set({ createdAt: Date.now() });
+    await db.ref("groups/" + groupId).set({ createdAt: Date.now() });
 
     const link =
-      window.location.origin +
-      window.location.pathname +
-      "?group=" + groupId;
-
-    window.history.replaceState({}, "", link);
+      location.origin + location.pathname + "?group=" + groupId;
     inviteLink.value = link;
     inviteBox.style.display = "block";
   }
 
-  await db.ref(`groups/${groupId}/currentRound`).set({
-    pickupBy: name,
-    pickupAt: new Date(time).getTime()
+  db.ref(`groups/${groupId}/currentRound`).set({
+    pickupBy: pickupInput.value,
+    pickupAt: new Date(pickupTime.value).getTime()
   });
+
+  listenOrders();
 };
 
-/******** EINLADUNG KOPIEREN ********/
-copyInvite.onclick = () => {
-  inviteLink.select();
-  document.execCommand("copy");
-  alert("Einladungslink kopiert");
-};
-
-/******** BESTELLUNG ********/
+/******** BESTELLUNG SPEICHERN ********/
 saveBtn.onclick = () => {
   if (!groupId) {
-    alert("Warte bis der Abholer die Runde startet");
+    alert("Warten bis Abholer startet");
     return;
   }
-  if (!family.value.trim()) {
-    alert("Haushaltsname fehlt");
-    return;
-  }
+  if (!family.value) return alert("Name fehlt");
 
   db.ref(`groups/${groupId}/currentRound/orders`).push({
-    household: family.value.trim(),
+    household: family.value,
     icon: selectedIcon,
-    items: cart,
-    createdAt: Date.now()
+    items: cart
   });
 
   family.value = "";
   renderProducts();
 };
 
-/******** AKTIVE BESTELLUNGEN ********/
-if (groupId) {
+/******** EINKAUFSZETTEL / LIVE ********/
+function listenOrders() {
   db.ref(`groups/${groupId}/currentRound/orders`)
     .on("value", snap => {
       overview.innerHTML = "";
-      snap.forEach(o => {
-        const d = o.val();
+
+      snap.forEach(c => {
+        const d = c.val();
         const box = document.createElement("div");
         box.className = "overview-box";
+
         box.innerHTML = `${d.icon} <b>${d.household}</b>`;
+
         for (let i in d.items) {
-          if (d.items[i] > 0) box.innerHTML += `<br>${i}: ${d.items[i]}×`;
+          if (d.items[i] > 0) {
+            box.innerHTML += `<br>${i}: ${d.items[i]}×`;
+          }
         }
+
+        const del = document.createElement("button");
+        del.textContent = "❌ Abgehakt / löschen";
+        del.className = "delete-btn";
+        del.onclick = () => {
+          if (confirm("Bestellung abhaken?")) {
+            db.ref(`groups/${groupId}/currentRound/orders/${c.key}`).remove();
+          }
+        };
+
+        box.appendChild(del);
         overview.appendChild(box);
       });
     });
-}
-
-/******** COUNTDOWN ********/
-db.ref().on("value", () => {
-  if (!groupId) return;
-
-  db.ref(`groups/${groupId}/currentRound`).once("value", snap => {
-    const d = snap.val();
-    if (!d || !d.pickupAt) return;
-
-    clearInterval(window._cd);
-    window._cd = setInterval(() => {
-      const diff = d.pickupAt - Date.now();
-      if (diff <= 0) {
-        countdown.textContent = "🚗💨 Wird abgeholt!";
-        clearInterval(window._cd);
-      } else {
-        const h = Math.floor(diff / 3600000);
-        const m = Math.floor(diff / 60000) % 60;
-        countdown.textContent = `⏳ Noch ${h}h ${m}min`;
-      }
-    }, 1000);
-  });
-});
-
-/******** RUNDE ABSCHLIESSEN → ARCHIV ********/
-closeRound.onclick = async () => {
-  if (!groupId) return;
-
-  const ref = db.ref(`groups/${groupId}`);
-  const snap = await ref.child("currentRound").once("value");
-  if (!snap.exists()) return;
-
-  const now = Date.now();
-  await ref.child("archive").push({
-    ...snap.val(),
-    closedAt: now,
-    deleteAt: now + 14 * 24 * 60 * 60 * 1000
-  });
-
-  await ref.child("currentRound").remove();
-};
-
-/******** ARCHIV ********/
-if (groupId) {
-  db.ref(`groups/${groupId}/archive`).on("value", snap => {
-    archive.innerHTML = "";
-    snap.forEach(r => {
-      const d = r.val();
-      const box = document.createElement("div");
-      box.className = "overview-box";
-      box.textContent =
-        "🗓️ " + new Date(d.pickupAt).toLocaleString("de-DE");
-      archive.appendChild(box);
-    });
-  });
 }
 
 /******** START ********/
