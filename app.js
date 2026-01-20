@@ -176,5 +176,26 @@ document.getElementById("clearPickup").onclick = () => {
 };
 
 /******** START ********/
+/******** 🚗💨 ABHOLER FIX OBEN + UNTEN ********/
+const pickupTop = document.getElementById("currentPickupTop");
+const pickupBottom = document.getElementById("currentPickupBottom");
+
+db.ref("meta/abholer").on("value", snap => {
+  const name = snap.val();
+
+  if (name) {
+    const text = `🚗💨 Abholer: ${name}`;
+
+    pickupTop.textContent = text;
+    pickupBottom.textContent = text;
+
+    pickupTop.style.display = "block";
+    pickupBottom.style.display = "block";
+  } else {
+    pickupTop.style.display = "none";
+    pickupBottom.style.display = "none";
+  }
+});
+
 renderIcons();
 renderProducts();
