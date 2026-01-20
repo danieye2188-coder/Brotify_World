@@ -32,9 +32,12 @@ const PRODUCTS = {
 };
 
 let cart = {};
+let currentPickup = null;
+
 const productsEl = document.getElementById("products");
 const overviewEl = document.getElementById("overview");
-const familyInput = document.getElementById("family");
+const nameInput = document.getElementById("family");
+const pickupInline = document.getElementById("pickupInline");
 
 /******** 🧩 ICON PICKER ********/
 function renderIcons() {
@@ -108,24 +111,25 @@ function renderProducts() {
   }
 }
 
-/******** 💾 BESTELLUNG SPEICHERN + RESET ********/
+/******** 💾 BESTELLUNG SPEICHERN ********/
 document.getElementById("saveBtn").onclick = () => {
-  const family = familyInput.value.trim();
-  if (!family) return alert("Familienname fehlt");
+  const name = nameInput.value.trim();
+  if (!name) return alert("Bitte deinen Namen eingeben");
 
-  db.ref("orders/" + family).set({
-    family,
+  db.ref("orders").push({
+    name,
     icon: selectedIcon,
-    items: cart
+    pickup: currentPickup || "",
+    items: cart,
+    time: Date.now()
   });
 
-  /* 🔄 RESET NACH SPEICHERN */
-  familyInput.value = "";      // Name leeren
-  renderProducts();            // Mengen auf 0
-  renderIcons();               // Icon zurücksetzen
+  nameInput.value = "";
+  renderProducts();
+  renderIcons();
 };
 
-/******** 🔴 LIVE + ❌ LÖSCHEN ********/
+/******** 🔴 LIVE ÜBERSICHT ********/
 db.ref("orders").on("value", snap => {
   overviewEl.innerHTML = "";
 
@@ -134,7 +138,10 @@ db.ref("orders").on("value", snap => {
     const box = document.createElement("div");
     box.className = "overview-box";
 
-    box.innerHTML = `${d.icon} <b>${c.key}</b>`;
+    box.innerHTML = `
+      ${d.icon} <b>${d.name}</b>
+      ${d.pickup ? `<div class="pickup-info">🚗💨 Abholer: <b>${d.pickup}</b></div>` : ""}
+    `;
 
     for (let i in d.items) {
       if (d.items[i] > 0) {
@@ -156,19 +163,18 @@ db.ref("orders").on("value", snap => {
   });
 });
 
-/******** 🚗💨 ABHOLER (LIVE) ********/
+/******** 🚗💨 ABHOLER (GLOBAL) ********/
 const pickupInput = document.getElementById("pickupInput");
-const pickupLabel = document.getElementById("pickupLabel");
 
 db.ref("meta/abholer").on("value", snap => {
-  const name = snap.val();
-  pickupLabel.textContent = name ? `🚗💨 ${name}` : "🚗💨";
-  pickupInput.style.display = name ? "none" : "inline-block";
+  currentPickup = snap.val();
+  pickupInline.textContent = currentPickup ? `🚗💨 ${currentPickup}` : "🚗💨 kein Abholer";
 });
 
 document.getElementById("savePickup").onclick = () => {
   if (!pickupInput.value) return;
   db.ref("meta/abholer").set(pickupInput.value);
+  pickupInput.value = "";
 };
 
 document.getElementById("clearPickup").onclick = () => {
