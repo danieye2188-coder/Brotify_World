@@ -9,7 +9,7 @@ body {
   background-attachment: fixed;
 }
 
-/* Karten-Look */
+/* Karten */
 body > *:not(.header-moon) {
   background: rgba(255,255,255,0.94);
   padding: 14px;
@@ -17,7 +17,7 @@ body > *:not(.header-moon) {
   border-radius: 12px;
 }
 
-/* 🌙 HALBMOND HEADER */
+/* Header */
 .header-moon {
   background: #f7e1b5;
   border-radius: 0 0 100% 100%;
@@ -40,7 +40,7 @@ body > *:not(.header-moon) {
   color: #5f3b0d;
 }
 
-/* 🚗💨 Abholer */
+/* Abholer */
 #pickupBox {
   position: fixed;
   top: 10px;
@@ -54,16 +54,11 @@ body > *:not(.header-moon) {
   z-index: 999;
 }
 
-#pickupBox input {
-  width: 120px;
-}
-
 /* Icons */
 #iconPicker {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  margin-bottom: 10px;
 }
 
 .icon {
@@ -83,7 +78,6 @@ body > *:not(.header-moon) {
   grid-template-columns: 1fr 40px 30px 40px;
   align-items: center;
   gap: 8px;
-  margin: 6px 0;
 }
 
 .pm {
@@ -105,6 +99,20 @@ body > *:not(.header-moon) {
   border-radius: 6px;
 }
 
+.pickup-info {
+  margin: 6px 0;
+  background: #fff3cd;
+  padding: 4px 6px;
+  border-radius: 6px;
+}
+
+.remark {
+  margin: 6px 0;
+  background: #e8f0fe;
+  padding: 4px 6px;
+  border-radius: 6px;
+}
+
 .delete-btn {
   background: #d9534f;
   color: white;
@@ -113,10 +121,10 @@ body > *:not(.header-moon) {
   width: 100%;
   margin-top: 8px;
 }
-.pickup-info {
-  margin: 6px 0;
-  font-size: 14px;
-  background: #fff3cd;
-  padding: 4px;
-  border-radius: 6px;
+
+/* Einkaufszettel */
+.shopping-row {
+  padding: 6px;
+  border-bottom: 1px dashed #ccc;
+  font-size: 16px;
 }
