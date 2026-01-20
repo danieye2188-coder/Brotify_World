@@ -192,8 +192,8 @@ db.ref("orders").on("value", snap => {
   Object.keys(totals).forEach(item => {
     shoppingListEl.innerHTML += `
       <label class="shopping-row">
-        <input type="checkbox">
         <span class="text">${totals[item]}× ${item}</span>
+        <input type="checkbox">
       </label>
     `;
   });
@@ -201,8 +201,8 @@ db.ref("orders").on("value", snap => {
   remarks.forEach(r => {
     shoppingListEl.innerHTML += `
       <label class="shopping-row">
-        <input type="checkbox">
         <span class="text">${r}</span>
+        <input type="checkbox">
       </label>
     `;
   });
