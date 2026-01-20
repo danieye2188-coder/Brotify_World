@@ -194,7 +194,9 @@ db.ref("orders").on("value", snap => {
 /******** 🚗💨 ABHOLER ********/
 db.ref("meta/abholer").on("value", snap => {
   currentPickup = snap.val() || "";
-  pickupInline.textContent = currentPickup ? `🚗💨 ${currentPickup}` : "🚗💨 kein Abholer";
+  pickupInline.textContent = currentPickup
+    ? `🚗💨 Abholer: ${currentPickup}`
+    : "🚗💨 kein Abholer";
 });
 
 document.getElementById("savePickup").onclick = () => {
