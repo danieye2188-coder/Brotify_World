@@ -32,12 +32,15 @@ const PRODUCTS = {
 };
 
 let cart = {};
-let currentPickup = null;
+let currentPickup = "";
 
 const productsEl = document.getElementById("products");
 const overviewEl = document.getElementById("overview");
+const shoppingListEl = document.getElementById("shoppingList");
 const nameInput = document.getElementById("family");
+const remarkInput = document.getElementById("remark");
 const pickupInline = document.getElementById("pickupInline");
+const pickupInput = document.getElementById("pickupInput");
 
 /******** 🧩 ICON PICKER ********/
 function renderIcons() {
@@ -119,19 +122,24 @@ document.getElementById("saveBtn").onclick = () => {
   db.ref("orders").push({
     name,
     icon: selectedIcon,
-    pickup: currentPickup || "",
+    pickup: currentPickup,
+    remark: remarkInput.value.trim(),
     items: cart,
     time: Date.now()
   });
 
   nameInput.value = "";
+  remarkInput.value = "";
   renderProducts();
   renderIcons();
 };
 
-/******** 🔴 LIVE ÜBERSICHT ********/
+/******** 🔴 LIVE ÜBERSICHT + EINKAUFSZETTEL ********/
 db.ref("orders").on("value", snap => {
   overviewEl.innerHTML = "";
+  shoppingListEl.innerHTML = "";
+
+  const totalItems = {};
 
   snap.forEach(c => {
     const d = c.val();
@@ -141,11 +149,13 @@ db.ref("orders").on("value", snap => {
     box.innerHTML = `
       ${d.icon} <b>${d.name}</b>
       ${d.pickup ? `<div class="pickup-info">🚗💨 Abholer: <b>${d.pickup}</b></div>` : ""}
+      ${d.remark ? `<div class="remark">📝 ${d.remark}</div>` : ""}
     `;
 
     for (let i in d.items) {
       if (d.items[i] > 0) {
         box.innerHTML += `<br>${i}: ${d.items[i]}×`;
+        totalItems[i] = (totalItems[i] || 0) + d.items[i];
       }
     }
 
@@ -161,13 +171,18 @@ db.ref("orders").on("value", snap => {
     box.appendChild(del);
     overviewEl.appendChild(box);
   });
+
+  for (let item in totalItems) {
+    const row = document.createElement("div");
+    row.className = "shopping-row";
+    row.innerHTML = `<label><input type="checkbox"> ${item}: <b>${totalItems[item]}×</b></label>`;
+    shoppingListEl.appendChild(row);
+  }
 });
 
-/******** 🚗💨 ABHOLER (GLOBAL) ********/
-const pickupInput = document.getElementById("pickupInput");
-
+/******** 🚗💨 ABHOLER ********/
 db.ref("meta/abholer").on("value", snap => {
-  currentPickup = snap.val();
+  currentPickup = snap.val() || "";
   pickupInline.textContent = currentPickup ? `🚗💨 ${currentPickup}` : "🚗💨 kein Abholer";
 });
 
