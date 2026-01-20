@@ -11,7 +11,6 @@ const db = firebase.database();
 /******** STATE ********/
 let cart = {};
 let selectedIcon = "🦊";
-let currentPickup = "";
 let editOrderId = null;
 
 /******** CONSTANTS ********/
@@ -147,12 +146,13 @@ function resetForm() {
   renderProducts();
 }
 
-/******** LIVE ÜBERSICHT ********/
+/******** LIVE ÜBERSICHT + EINKAUFSZETTEL ********/
 db.ref("orders").on("value", snap => {
   overviewEl.innerHTML = "";
   shoppingListEl.innerHTML = "";
 
   const totalItems = {};
+  const remarks = [];
 
   snap.forEach(c => {
     const d = c.val();
@@ -165,40 +165,35 @@ db.ref("orders").on("value", snap => {
 
     for (let i in d.items) {
       if (d.items[i] > 0) {
-        box.innerHTML += `<br>${i}: ${d.items[i]}×`;
         totalItems[i] = (totalItems[i] || 0) + d.items[i];
       }
     }
 
-    const edit = document.createElement("button");
-    edit.textContent = "✏️ Bearbeiten";
-    edit.onclick = () => {
-      editOrderId = c.key;
-      nameInput.value = d.name;
-      remarkInput.value = d.remark || "";
-      selectedIcon = d.icon;
-      renderIcons(d.icon);
-      renderProducts(d.items);
-      saveBtn.textContent = "✏️ Bestellung aktualisieren";
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    };
+    if (d.remark) remarks.push(`📝 ${d.name}: ${d.remark}`);
 
-    const del = document.createElement("button");
-    del.textContent = "❌ Löschen";
-    del.className = "delete-btn";
-    del.onclick = () => {
-      if (confirm("Bestellung wirklich löschen?")) {
-        db.ref("orders/" + c.key).remove();
-      }
-    };
-
-    box.append(edit, del);
     overviewEl.appendChild(box);
   });
 
+  /* Einkaufszettel – Produkte */
   for (let item in totalItems) {
-    shoppingListEl.innerHTML +=
-      `<div class="shopping-row"><label><input type="checkbox"> ${totalItems[item]}× ${item}</label></div>`;
+    shoppingListEl.innerHTML += `
+      <div class="shopping-item">
+        <span class="text">${totalItems[item]}× ${item}</span>
+        <input type="checkbox">
+      </div>
+    `;
+  }
+
+  /* Einkaufszettel – Bemerkungen */
+  if (remarks.length) {
+    remarks.forEach(r => {
+      shoppingListEl.innerHTML += `
+        <div class="shopping-item remark-item">
+          <span class="text">${r}</span>
+          <input type="checkbox">
+        </div>
+      `;
+    });
   }
 });
 
