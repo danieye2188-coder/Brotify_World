@@ -142,30 +142,41 @@ textarea {
   font-size: 16px;
 }
 
-/* 🛒 BESTELLBUTTON – NEU */
+/* 🛒 BESTELLBUTTON */
 #saveBtn {
   width: 100%;
   margin-top: 12px;
   padding: 16px;
-
   font-size: 20px;
   font-weight: bold;
-
   background: #fff7e6;
   border: 4px solid #c58b2b;
   border-radius: 14px;
-
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
-/* Hover */
 #saveBtn:hover {
   background: #ffe6b8;
   transform: scale(1.01);
 }
 
-/* Active / Click */
 #saveBtn:active {
   transform: scale(0.99);
+}
+
+/* 🍊 HR – ORANGENSAFT-GELBE TRENNLINIE (NEU) */
+hr {
+  border: none;
+  height: 6px;
+  margin: 20px 0;
+
+  background: linear-gradient(
+    90deg,
+    #f9c74f,
+    #f9844a,
+    #f9c74f
+  );
+
+  border-radius: 6px;
 }
