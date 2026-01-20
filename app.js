@@ -123,7 +123,6 @@ document.getElementById("saveBtn").onclick = () => {
   db.ref("orders").push({
     name,
     icon: selectedIcon,
-    pickup: currentPickup,
     remark: remarkInput.value.trim(),
     items: cart,
     time: Date.now()
@@ -151,7 +150,6 @@ db.ref("orders").on("value", snap => {
 
     box.innerHTML = `
       ${d.icon} <b>${d.name}</b>
-      ${d.pickup ? `<div class="pickup-info">🚗💨 Abholer: <b>${d.pickup}</b></div>` : ""}
       ${d.remark ? `<div class="remark">📝 ${d.remark}</div>` : ""}
     `;
 
@@ -191,7 +189,7 @@ db.ref("orders").on("value", snap => {
   }
 });
 
-/******** 🚗💨 ABHOLER ********/
+/******** 🚗💨 ABHOLER (GLOBAL) ********/
 db.ref("meta/abholer").on("value", snap => {
   currentPickup = snap.val() || "";
   pickupInline.textContent = currentPickup
