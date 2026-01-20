@@ -1,242 +1,47 @@
-/******** FIREBASE ********/
-var firebaseConfig = {
-  apiKey: "AIzaSyA8dGj6T1E3PkO3YBu3OdpW_ZjCg00dncU",
-  authDomain: "brotifyneu.firebaseapp.com",
-  databaseURL: "https://brotifyneu-default-rtdb.firebaseio.com",
-  projectId: "brotifyneu"
-};
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Brotify 🍞</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-/******** STATE ********/
-let cart = {};
-let selectedIcon = "🦊";
-let editOrderId = null;
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Nunito:wght@700&display=swap" rel="stylesheet">
+</head>
+<body>
 
-/******** CONSTANTS ********/
-const ICONS = ["🦊","🐻","🦄","🍄","👻","🐸","🐼","🐱","🐶","🦉","🐯","🐷","🐮","🐰","🐵"];
+<!-- 🚗💨 ABHOLER -->
+<div id="pickupBox">
+  <span>🚗💨</span>
+  <input id="pickupInput" placeholder="Abholer Name">
+  <button id="savePickup">✔</button>
+  <button id="clearPickup">✖</button>
+</div>
 
-const PRODUCTS = {
-  "Weckle & Brötchen": [
-    "Laugenweckle","Körnerweckle","Doppelweckle","Seelen",
-    "Sonnenblumeweckle","Kürbisweckle","Dinkelweckle",
-    "Vollkornweckle","Mehrkornweckle","Roggenweckle"
-  ],
-  "Laugengebäck & Laugenecken": [
-    "Laugenstange","Laugenhörnchen",
-    "Laugenecke klassisch","Laugenecke mit Körnern","Brezel"
-  ],
-  "Croissants & süßes Gebäck": [
-    "Buttercroissant","Schokocroissant"
-  ],
-  "Brote & Zopf": [
-    "Zopf","Kleines Landbrot"
-  ]
-};
+<!-- HEADER -->
+<div class="header-moon">
+  <h1>Brotify</h1>
+  <p>Gemeinsames Frühstück</p>
+</div>
 
-/******** DOM ********/
-const productsEl = document.getElementById("products");
-const overviewEl = document.getElementById("overview");
-const shoppingListEl = document.getElementById("shoppingList");
-const nameInput = document.getElementById("family");
-const remarkInput = document.getElementById("remark");
-const pickupInline = document.getElementById("pickupInline");
-const pickupInput = document.getElementById("pickupInput");
-const saveBtn = document.getElementById("saveBtn");
+<input id="family" placeholder="Dein Name">
+<div id="pickupInline" class="pickup-under">🚗💨 kein Abholer</div>
 
-/******** ICON PICKER ********/
-function renderIcons(active = selectedIcon) {
-  const picker = document.getElementById("iconPicker");
-  picker.innerHTML = "";
+<div id="iconPicker"></div>
+<div id="products"></div>
 
-  ICONS.forEach(icon => {
-    const span = document.createElement("span");
-    span.textContent = icon;
-    span.className = "icon" + (icon === active ? " selected" : "");
-    span.onclick = () => {
-      selectedIcon = icon;
-      renderIcons(icon);
-    };
-    picker.appendChild(span);
-  });
-}
+<textarea id="remark" placeholder="Bemerkung (z.B. 3 Eier)"></textarea>
 
-/******** PRODUKTE ********/
-function renderProducts(items = {}) {
-  productsEl.innerHTML = "";
-  cart = {};
+<button id="saveBtn">🛒 Bestellung speichern</button>
 
-  for (let cat in PRODUCTS) {
-    const h = document.createElement("h3");
-    h.textContent = cat;
-    productsEl.appendChild(h);
+<h2>📋 Bestellungen</h2>
+<div id="overview"></div>
 
-    PRODUCTS[cat].forEach(p => {
-      cart[p] = items[p] || 0;
+<h2>🧾 Einkaufszettel</h2>
+<div id="shoppingList"></div>
 
-      const row = document.createElement("div");
-      row.className = "product";
-
-      const name = document.createElement("div");
-      name.textContent = p;
-
-      const minus = document.createElement("button");
-      minus.textContent = "−";
-      minus.className = "pm";
-
-      const amt = document.createElement("div");
-      amt.className = "amount";
-      amt.textContent = cart[p];
-
-      const plus = document.createElement("button");
-      plus.textContent = "+";
-      plus.className = "pm";
-
-      minus.onclick = () => {
-        if (cart[p] > 0) {
-          cart[p]--;
-          amt.textContent = cart[p];
-        }
-      };
-
-      plus.onclick = () => {
-        cart[p]++;
-        amt.textContent = cart[p];
-      };
-
-      row.append(name, minus, amt, plus);
-      productsEl.appendChild(row);
-    });
-  }
-}
-
-/******** SPEICHERN / AKTUALISIEREN ********/
-saveBtn.onclick = () => {
-  const name = nameInput.value.trim();
-  if (!name) return alert("Bitte deinen Namen eingeben");
-
-  const data = {
-    name,
-    icon: selectedIcon,
-    remark: remarkInput.value.trim(),
-    items: JSON.parse(JSON.stringify(cart)),
-    time: Date.now()
-  };
-
-  editOrderId
-    ? db.ref("orders/" + editOrderId).set(data)
-    : db.ref("orders").push(data);
-
-  resetForm();
-};
-
-function resetForm() {
-  editOrderId = null;
-  saveBtn.textContent = "🛒 Bestellung speichern";
-  nameInput.value = "";
-  remarkInput.value = "";
-  selectedIcon = ICONS[0];
-  renderIcons();
-  renderProducts();
-}
-
-/******** LIVE: BESTELLUNGEN + EINKAUFSZETTEL ********/
-db.ref("orders").on("value", snap => {
-  overviewEl.innerHTML = "";
-  shoppingListEl.innerHTML = "";
-
-  const totals = {};
-  const remarks = [];
-
-  snap.forEach(c => {
-    const d = c.val();
-
-    const box = document.createElement("div");
-    box.className = "overview-box";
-
-    box.innerHTML = `
-      ${d.icon} <b>${d.name}</b>
-      ${d.remark ? `<div class="remark">📝 ${d.remark}</div>` : ""}
-    `;
-
-    for (let i in d.items) {
-      if (d.items[i] > 0) {
-        totals[i] = (totals[i] || 0) + d.items[i];
-        box.innerHTML += `<br>${i}: ${d.items[i]}×`;
-      }
-    }
-
-    if (d.remark) remarks.push(`📝 ${d.name}: ${d.remark}`);
-
-    /* 🔧 BUTTON-LEISTE (NEU) */
-    const actions = document.createElement("div");
-    actions.className = "order-actions";
-
-    const editBtn = document.createElement("button");
-    editBtn.textContent = "✏️ Bearbeiten";
-    editBtn.className = "edit-btn";
-    editBtn.onclick = () => {
-      editOrderId = c.key;
-      nameInput.value = d.name;
-      remarkInput.value = d.remark || "";
-      selectedIcon = d.icon;
-      renderIcons(d.icon);
-      renderProducts(d.items);
-      saveBtn.textContent = "✏️ Bestellung aktualisieren";
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    };
-
-    const delBtn = document.createElement("button");
-    delBtn.textContent = "❌ Bestellung löschen";
-    delBtn.className = "delete-btn";
-    delBtn.onclick = () => {
-      if (confirm("Bestellung wirklich löschen?")) {
-        db.ref("orders/" + c.key).remove();
-      }
-    };
-
-    actions.appendChild(editBtn);
-    box.append(actions, delBtn);
-    overviewEl.appendChild(box);
-  });
-
-  Object.keys(totals).forEach(item => {
-    shoppingListEl.innerHTML += `
-      <label class="shopping-item">
-        <input type="checkbox">
-        <span class="text">${totals[item]}× ${item}</span>
-      </label>
-    `;
-  });
-
-  remarks.forEach(r => {
-    shoppingListEl.innerHTML += `
-      <label class="shopping-item remark-item">
-        <input type="checkbox">
-        <span class="text">${r}</span>
-      </label>
-    `;
-  });
-});
-
-/******** 🚗💨 ABHOLER ********/
-db.ref("meta/abholer").on("value", snap => {
-  pickupInline.textContent = snap.val()
-    ? `🚗💨 Abholer: ${snap.val()}`
-    : "🚗💨 kein Abholer";
-});
-
-document.getElementById("savePickup").onclick = () => {
-  const val = pickupInput.value.trim();
-  if (!val) return;
-  db.ref("meta/abholer").set(val);
-  pickupInput.value = "";
-};
-
-document.getElementById("clearPickup").onclick = () => {
-  db.ref("meta/abholer").remove();
-};
-
-/******** START ********/
-renderIcons();
-renderProducts();
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
