@@ -45,23 +45,19 @@ const pickupInput = document.getElementById("pickupInput");
 const saveBtn = document.getElementById("saveBtn");
 
 /******** ICON PICKER ********/
-function renderIcons(activeIcon = selectedIcon) {
+function renderIcons(active = selectedIcon) {
   const picker = document.getElementById("iconPicker");
   picker.innerHTML = "";
 
   ICONS.forEach(icon => {
-    const span = document.createElement("span");
-    span.textContent = icon;
-    span.className = "icon";
-    if (icon === activeIcon) span.classList.add("selected");
-
-    span.onclick = () => {
-      document.querySelectorAll(".icon").forEach(i => i.classList.remove("selected"));
-      span.classList.add("selected");
+    const s = document.createElement("span");
+    s.textContent = icon;
+    s.className = "icon" + (icon === active ? " selected" : "");
+    s.onclick = () => {
       selectedIcon = icon;
+      renderIcons(icon);
     };
-
-    picker.appendChild(span);
+    picker.appendChild(s);
   });
 }
 
@@ -97,15 +93,10 @@ function renderProducts(items = {}) {
       plus.className = "pm";
 
       minus.onclick = () => {
-        if (cart[p] > 0) {
-          cart[p]--;
-          amt.textContent = cart[p];
-        }
+        if (cart[p] > 0) amt.textContent = --cart[p];
       };
-
       plus.onclick = () => {
-        cart[p]++;
-        amt.textContent = cart[p];
+        amt.textContent = ++cart[p];
       };
 
       row.append(name, minus, amt, plus);
@@ -114,31 +105,28 @@ function renderProducts(items = {}) {
   }
 }
 
-/******** SPEICHERN / UPDATE ********/
+/******** SPEICHERN ********/
 saveBtn.onclick = () => {
   const name = nameInput.value.trim();
-  if (!name) return alert("Bitte deinen Namen eingeben");
+  if (!name) return alert("Bitte Namen eingeben");
 
   const data = {
     name,
     icon: selectedIcon,
     remark: remarkInput.value.trim(),
-    items: cart,
+    items: JSON.parse(JSON.stringify(cart)),
     time: Date.now()
   };
 
-  if (editOrderId) {
-    db.ref("orders/" + editOrderId).update(data);
-  } else {
-    db.ref("orders").push(data);
-  }
+  editOrderId
+    ? db.ref("orders/" + editOrderId).set(data)
+    : db.ref("orders").push(data);
 
   resetForm();
 };
 
 function resetForm() {
   editOrderId = null;
-  saveBtn.textContent = "🛒 Bestellung speichern";
   nameInput.value = "";
   remarkInput.value = "";
   selectedIcon = ICONS[0];
@@ -146,100 +134,63 @@ function resetForm() {
   renderProducts();
 }
 
-/******** LIVE ÜBERSICHT + EINKAUFSZETTEL ********/
+/******** LIVE VIEW ********/
 db.ref("orders").on("value", snap => {
   overviewEl.innerHTML = "";
   shoppingListEl.innerHTML = "";
 
-  const totalItems = {};
+  const totals = {};
   const remarks = [];
 
   snap.forEach(c => {
     const d = c.val();
 
-    /* ===== BESTELLÜBERSICHT ===== */
     const box = document.createElement("div");
     box.className = "overview-box";
-
-    box.innerHTML = `
-      ${d.icon} <b>${d.name}</b>
-      ${d.remark ? `<div class="remark">📝 ${d.remark}</div>` : ""}
-    `;
+    box.innerHTML = `${d.icon} <b>${d.name}</b>
+      ${d.remark ? `<div class="remark">📝 ${d.remark}</div>` : ""}`;
 
     for (let i in d.items) {
       if (d.items[i] > 0) {
+        totals[i] = (totals[i] || 0) + d.items[i];
         box.innerHTML += `<br>${i}: ${d.items[i]}×`;
-        totalItems[i] = (totalItems[i] || 0) + d.items[i];
       }
     }
 
     if (d.remark) remarks.push(`📝 ${d.name}: ${d.remark}`);
 
-    /* Bearbeiten */
-    const editBtn = document.createElement("button");
-    editBtn.textContent = "✏️ Bearbeiten";
-    editBtn.onclick = () => {
-      editOrderId = c.key;
-      nameInput.value = d.name;
-      remarkInput.value = d.remark || "";
-      selectedIcon = d.icon;
-      renderIcons(d.icon);
-      renderProducts(d.items);
-      saveBtn.textContent = "✏️ Bestellung aktualisieren";
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    };
+    const del = document.createElement("button");
+    del.className = "delete-btn";
+    del.textContent = "❌ Löschen";
+    del.onclick = () => db.ref("orders/" + c.key).remove();
 
-    /* Löschen */
-    const delBtn = document.createElement("button");
-    delBtn.textContent = "❌ Bestellung löschen";
-    delBtn.className = "delete-btn";
-    delBtn.onclick = () => {
-      if (confirm("Bestellung wirklich löschen?")) {
-        db.ref("orders/" + c.key).remove();
-      }
-    };
-
-    box.append(editBtn, delBtn);
+    box.appendChild(del);
     overviewEl.appendChild(box);
   });
 
-  /* ===== EINKAUFSZETTEL ===== */
-  for (let item in totalItems) {
+  Object.keys(totals).forEach(i => {
     shoppingListEl.innerHTML += `
       <label class="shopping-item">
-        <span class="text">${totalItems[item]}× ${item}</span>
         <input type="checkbox">
-      </label>
-    `;
-  }
+        <span>${totals[i]}× ${i}</span>
+      </label>`;
+  });
 
   remarks.forEach(r => {
     shoppingListEl.innerHTML += `
       <label class="shopping-item remark-item">
-        <span class="text">${r}</span>
         <input type="checkbox">
-      </label>
-    `;
+        <span>${r}</span>
+      </label>`;
   });
 });
 
 /******** ABHOLER ********/
-db.ref("meta/abholer").on("value", snap => {
-  pickupInline.textContent = snap.val()
-    ? `🚗💨 Abholer: ${snap.val()}`
+db.ref("meta/abholer").on("value", s => {
+  pickupInline.textContent = s.val()
+    ? `🚗💨 Abholer: ${s.val()}`
     : "🚗💨 kein Abholer";
 });
-
-document.getElementById("savePickup").onclick = () => {
-  if (pickupInput.value) {
-    db.ref("meta/abholer").set(pickupInput.value);
-    pickupInput.value = "";
-  }
-};
-
-document.getElementById("clearPickup").onclick = () => {
-  db.ref("meta/abholer").remove();
-};
 
 /******** START ********/
 renderIcons();
