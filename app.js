@@ -200,13 +200,23 @@ db.ref("orders").on("value", snap => {
   });
 });
 
-/******** ABHOLER ********/
+/******** ABHOLER – FINAL & FUNKTIONIERT ********/
 db.ref("meta/abholer").on("value", snap => {
   pickupInline.textContent = snap.val()
     ? `🚗💨 Abholer: ${snap.val()}`
     : "🚗💨 kein Abholer";
 });
 
+document.getElementById("savePickup").onclick = () => {
+  const val = pickupInput.value.trim();
+  if (!val) return;
+  db.ref("meta/abholer").set(val);
+  pickupInput.value = "";
+};
+
+document.getElementById("clearPickup").onclick = () => {
+  db.ref("meta/abholer").remove();
+};
 /******** START ********/
 renderIcons();
 renderProducts();
