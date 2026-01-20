@@ -196,3 +196,21 @@ hr {
 
   border-radius: 6px;
 }
+/* 📱 MOBILE OPTIMIERUNG FÜR BESTELLBUTTON */
+@media (max-width: 600px) {
+  #saveBtn {
+    padding: 20px;
+    font-size: 22px;
+
+    background: linear-gradient(
+      180deg,
+      #ffdd9a,
+      #f9c74f
+    );
+
+    border: 4px solid #e09f1f;
+    border-radius: 18px;
+
+    box-shadow: 0 6px 14px rgba(0,0,0,0.2);
+  }
+}
