@@ -132,3 +132,35 @@ body > *:not(.header-moon) {
 .pickup-bottom {
   margin-top: 14px;
 }
+/* Familie + Abholer nebeneinander */
+.family-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+#family {
+  flex: 1;
+}
+
+/* Abholer neben Familienname */
+.pickup-inline {
+  font-weight: bold;
+  padding: 6px 10px;
+  background: #fff3cd;
+  border-radius: 8px;
+  color: #6b4a12;
+  white-space: nowrap;
+  display: none;
+}
+
+/* Abholer unten */
+.pickup-bottom {
+  font-weight: bold;
+  padding: 8px 12px;
+  margin-bottom: 10px;
+  background: #fff3cd;
+  border-radius: 10px;
+  color: #6b4a12;
+  display: none;
+}
