@@ -1,3 +1,4 @@
+/* ===== GRUNDLAYOUT ===== */
 body {
   font-family: 'Nunito', sans-serif;
   max-width: 900px;
@@ -16,7 +17,7 @@ body > *:not(.header-moon) {
   border-radius: 12px;
 }
 
-/* 🌙 HEADER */
+/* ===== HEADER ===== */
 .header-moon {
   background: #f7e1b5;
   border-radius: 0 0 100% 100%;
@@ -36,11 +37,31 @@ body > *:not(.header-moon) {
 .header-moon p {
   font-family: 'Pacifico', cursive;
   font-size: 22px;
-  margin: 8px 0 0;
+  margin-top: 8px;
   color: #6a3f0f;
 }
 
-/* Inputs */
+/* ===== ABHOLER ===== */
+#pickupBox {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  background: white;
+  padding: 6px;
+  border-radius: 10px;
+  z-index: 999;
+}
+
+.pickup-under {
+  margin-top: 6px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+/* ===== INPUTS ===== */
 input,
 textarea {
   width: 100%;
@@ -51,7 +72,25 @@ textarea {
   border: 1px solid #ccc;
 }
 
-/* 🥖 Produkte */
+/* ===== ICON PICKER ===== */
+#iconPicker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.icon {
+  font-size: 26px;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 6px;
+}
+
+.icon.selected {
+  outline: 2px solid #c58b2b;
+}
+
+/* ===== PRODUKTLISTE ===== */
 .product {
   display: grid;
   grid-template-columns: 1fr 40px 30px 40px;
@@ -70,7 +109,7 @@ textarea {
   font-weight: bold;
 }
 
-/* 🛒 BESTELLBUTTON */
+/* ===== BESTELLBUTTON ===== */
 #saveBtn {
   width: 100%;
   margin-top: 12px;
@@ -81,56 +120,96 @@ textarea {
   border: 4px solid #c58b2b;
   border-radius: 14px;
   cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-/* 📱 MOBILE */
+#saveBtn:hover {
+  background: #ffe6b8;
+  transform: scale(1.01);
+}
+
+#saveBtn:active {
+  transform: scale(0.99);
+}
+
+/* 📱 Mobile Boost */
 @media (max-width: 600px) {
   #saveBtn {
     padding: 20px;
     font-size: 22px;
     background: linear-gradient(180deg, #ffdd9a, #f9c74f);
     border-color: #e09f1f;
+    border-radius: 18px;
+    box-shadow: 0 6px 14px rgba(0,0,0,0.2);
   }
 }
 
-/* 🧾 EINKAUFSZETTEL – NEU */
+/* ===== ÜBERSICHT ===== */
+.overview-box {
+  background: rgba(255,255,255,0.95);
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 6px;
+}
+
+.remark {
+  margin: 6px 0;
+  background: #e8f0fe;
+  padding: 4px 6px;
+  border-radius: 6px;
+}
+
+.delete-btn {
+  background: #d9534f;
+  color: white;
+  border: none;
+  padding: 6px;
+  width: 100%;
+  margin-top: 8px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* ===== EINKAUFSZETTEL ===== */
 .shopping-item {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 10px;
 
   padding: 10px 6px;
+  margin-bottom: 6px;
+
   border-bottom: 1px dashed #ccc;
   font-size: 16px;
+  cursor: pointer;
 }
 
 .shopping-item .text {
   flex: 1;
-  padding-right: 10px;
 }
 
-/* Durchstreichen bei Abhaken */
-.shopping-item input[type="checkbox"]:checked + .text,
+/* Durchstreichen beim Abhaken */
 .shopping-item input[type="checkbox"]:checked ~ .text {
   text-decoration: line-through;
   color: #999;
 }
 
-/* Checkbox größer & sauber */
+/* Checkbox */
 .shopping-item input[type="checkbox"] {
   width: 22px;
   height: 22px;
   cursor: pointer;
 }
 
-/* Bemerkungen leicht abheben */
+/* Bemerkungen optisch abheben */
 .remark-item {
   background: #f0f6ff;
   border-radius: 6px;
-  margin-top: 4px;
+  padding: 10px;
 }
 
-/* HR komplett entfernen */
+/* ===== TRENNLINIEN KOMPLETT ENTFERNT ===== */
 hr {
   display: none;
 }
