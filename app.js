@@ -50,14 +50,14 @@ function renderIcons(active = selectedIcon) {
   picker.innerHTML = "";
 
   ICONS.forEach(icon => {
-    const s = document.createElement("span");
-    s.textContent = icon;
-    s.className = "icon" + (icon === active ? " selected" : "");
-    s.onclick = () => {
+    const span = document.createElement("span");
+    span.textContent = icon;
+    span.className = "icon" + (icon === active ? " selected" : "");
+    span.onclick = () => {
       selectedIcon = icon;
       renderIcons(icon);
     };
-    picker.appendChild(s);
+    picker.appendChild(span);
   });
 }
 
@@ -93,10 +93,15 @@ function renderProducts(items = {}) {
       plus.className = "pm";
 
       minus.onclick = () => {
-        if (cart[p] > 0) amt.textContent = --cart[p];
+        if (cart[p] > 0) {
+          cart[p]--;
+          amt.textContent = cart[p];
+        }
       };
+
       plus.onclick = () => {
-        amt.textContent = ++cart[p];
+        cart[p]++;
+        amt.textContent = cart[p];
       };
 
       row.append(name, minus, amt, plus);
@@ -108,7 +113,7 @@ function renderProducts(items = {}) {
 /******** SPEICHERN ********/
 saveBtn.onclick = () => {
   const name = nameInput.value.trim();
-  if (!name) return alert("Bitte Namen eingeben");
+  if (!name) return alert("Bitte deinen Namen eingeben");
 
   const data = {
     name,
@@ -127,6 +132,7 @@ saveBtn.onclick = () => {
 
 function resetForm() {
   editOrderId = null;
+  saveBtn.textContent = "🛒 Bestellung speichern";
   nameInput.value = "";
   remarkInput.value = "";
   selectedIcon = ICONS[0];
@@ -134,7 +140,7 @@ function resetForm() {
   renderProducts();
 }
 
-/******** LIVE VIEW ********/
+/******** LIVE + EINKAUFSZETTEL ********/
 db.ref("orders").on("value", snap => {
   overviewEl.innerHTML = "";
   shoppingListEl.innerHTML = "";
@@ -147,8 +153,10 @@ db.ref("orders").on("value", snap => {
 
     const box = document.createElement("div");
     box.className = "overview-box";
-    box.innerHTML = `${d.icon} <b>${d.name}</b>
-      ${d.remark ? `<div class="remark">📝 ${d.remark}</div>` : ""}`;
+    box.innerHTML = `
+      ${d.icon} <b>${d.name}</b>
+      ${d.remark ? `<div class="remark">📝 ${d.remark}</div>` : ""}
+    `;
 
     for (let i in d.items) {
       if (d.items[i] > 0) {
@@ -161,34 +169,41 @@ db.ref("orders").on("value", snap => {
 
     const del = document.createElement("button");
     del.className = "delete-btn";
-    del.textContent = "❌ Löschen";
-    del.onclick = () => db.ref("orders/" + c.key).remove();
+    del.textContent = "❌ Bestellung löschen";
+    del.onclick = () => {
+      if (confirm("Bestellung wirklich löschen?")) {
+        db.ref("orders/" + c.key).remove();
+      }
+    };
 
     box.appendChild(del);
     overviewEl.appendChild(box);
   });
 
-  Object.keys(totals).forEach(i => {
+  /* Einkaufszettel */
+  Object.keys(totals).forEach(item => {
     shoppingListEl.innerHTML += `
       <label class="shopping-item">
         <input type="checkbox">
-        <span>${totals[i]}× ${i}</span>
-      </label>`;
+        <span class="text">${totals[item]}× ${item}</span>
+      </label>
+    `;
   });
 
   remarks.forEach(r => {
     shoppingListEl.innerHTML += `
       <label class="shopping-item remark-item">
         <input type="checkbox">
-        <span>${r}</span>
-      </label>`;
+        <span class="text">${r}</span>
+      </label>
+    `;
   });
 });
 
 /******** ABHOLER ********/
-db.ref("meta/abholer").on("value", s => {
-  pickupInline.textContent = s.val()
-    ? `🚗💨 Abholer: ${s.val()}`
+db.ref("meta/abholer").on("value", snap => {
+  pickupInline.textContent = snap.val()
+    ? `🚗💨 Abholer: ${snap.val()}`
     : "🚗💨 kein Abholer";
 });
 
