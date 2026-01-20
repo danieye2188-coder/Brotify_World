@@ -147,11 +147,14 @@ textarea {
   width: 100%;
   margin-top: 12px;
   padding: 16px;
+
   font-size: 20px;
   font-weight: bold;
+
   background: #fff7e6;
   border: 4px solid #c58b2b;
   border-radius: 14px;
+
   cursor: pointer;
   transition: all 0.2s ease;
 }
@@ -165,52 +168,19 @@ textarea {
   transform: scale(0.99);
 }
 
-/* 🍊 HR – ORANGENSAFT-GELBE TRENNLINIE (NEU) */
-hr {
-  border: none;
-  height: 6px;
-  margin: 20px 0;
-
-  background: linear-gradient(
-    90deg,
-    #f9c74f,
-    #f9844a,
-    #f9c74f
-  );
-
-  border-radius: 6px;
-}
-/* 🍊 HR – echte visuelle Trennlinie OHNE weißen Kasten */
-hr {
-  all: unset;                 /* entfernt ALLE geerbten Styles */
-  display: block;
-  height: 6px;
-  margin: 24px 0;
-
-  background: linear-gradient(
-    90deg,
-    #f9c74f,
-    #f9844a,
-    #f9c74f
-  );
-
-  border-radius: 6px;
-}
-/* 📱 MOBILE OPTIMIERUNG FÜR BESTELLBUTTON */
+/* 📱 MOBILE BUTTON BOOST */
 @media (max-width: 600px) {
   #saveBtn {
     padding: 20px;
     font-size: 22px;
-
-    background: linear-gradient(
-      180deg,
-      #ffdd9a,
-      #f9c74f
-    );
-
-    border: 4px solid #e09f1f;
+    background: linear-gradient(180deg, #ffdd9a, #f9c74f);
+    border-color: #e09f1f;
     border-radius: 18px;
-
     box-shadow: 0 6px 14px rgba(0,0,0,0.2);
   }
+}
+
+/* ❌ HR KOMPLETT ENTFERNEN */
+hr {
+  display: none;
 }
