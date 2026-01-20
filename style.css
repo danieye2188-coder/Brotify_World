@@ -9,9 +9,13 @@ body {
   background-position: center;
 }
 
-/* Einheitliche Container */
+/* 🍊 ORANGENSAFT-GELBE CONTAINER (HIER IST DER FIX) */
 body > *:not(.header-moon) {
-  background: rgba(255,255,255,0.94);
+  background: linear-gradient(
+    180deg,
+    #fff1b8,
+    #f9c74f
+  );
   padding: 14px;
   margin-bottom: 14px;
   border-radius: 12px;
@@ -64,6 +68,7 @@ textarea {
   border: 1px solid #ccc;
   font-family: inherit;
   font-size: 16px;
+  background: white;
 }
 
 #remark {
@@ -146,27 +151,26 @@ textarea {
   cursor: pointer;
 }
 
-/* ===== EINKAUFSZETTEL (SAUBERE LISTE) ===== */
+/* ===== EINKAUFSZETTEL – SAUBER & GERADE ===== */
 .shopping-row {
   display: grid;
-  grid-template-columns: 1fr 28px; /* Text | Checkbox */
+  grid-template-columns: 1fr 28px;
   align-items: center;
   column-gap: 12px;
 
   padding: 8px 0;
-  border-bottom: 1px dashed #ccc;
+  border-bottom: 1px dashed #c58b2b;
 }
 
 .shopping-row .text {
   line-height: 1.4;
 }
 
-/* Checkbox immer rechts */
 .shopping-row input {
   justify-self: end;
 }
 
-/* Durchstreichen beim Abhaken */
+/* Durchstreichen */
 .shopping-row input:checked ~ .text {
   text-decoration: line-through;
   color: #999;
