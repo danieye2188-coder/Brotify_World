@@ -114,7 +114,7 @@ function renderProducts(items = {}) {
   }
 }
 
-/******** SPEICHERN / UPDATE ********/
+/******** SPEICHERN ********/
 saveBtn.onclick = () => {
   const name = nameInput.value.trim();
   if (!name) return alert("Bitte deinen Namen eingeben");
@@ -138,7 +138,6 @@ saveBtn.onclick = () => {
 
 function resetForm() {
   editOrderId = null;
-  saveBtn.textContent = "🛒 Bestellung speichern";
   nameInput.value = "";
   remarkInput.value = "";
   selectedIcon = ICONS[0];
@@ -146,7 +145,7 @@ function resetForm() {
   renderProducts();
 }
 
-/******** LIVE ÜBERSICHT + EINKAUFSZETTEL ********/
+/******** LIVE + EINKAUFSZETTEL ********/
 db.ref("orders").on("value", snap => {
   overviewEl.innerHTML = "";
   shoppingListEl.innerHTML = "";
@@ -157,12 +156,6 @@ db.ref("orders").on("value", snap => {
   snap.forEach(c => {
     const d = c.val();
 
-    const box = document.createElement("div");
-    box.className = "overview-box";
-
-    box.innerHTML = `${d.icon} <b>${d.name}</b>
-      ${d.remark ? `<div class="remark">📝 ${d.remark}</div>` : ""}`;
-
     for (let i in d.items) {
       if (d.items[i] > 0) {
         totalItems[i] = (totalItems[i] || 0) + d.items[i];
@@ -170,31 +163,25 @@ db.ref("orders").on("value", snap => {
     }
 
     if (d.remark) remarks.push(`📝 ${d.name}: ${d.remark}`);
-
-    overviewEl.appendChild(box);
   });
 
-  /* Einkaufszettel – Produkte */
   for (let item in totalItems) {
     shoppingListEl.innerHTML += `
-      <div class="shopping-item">
+      <label class="shopping-item">
         <span class="text">${totalItems[item]}× ${item}</span>
         <input type="checkbox">
-      </div>
+      </label>
     `;
   }
 
-  /* Einkaufszettel – Bemerkungen */
-  if (remarks.length) {
-    remarks.forEach(r => {
-      shoppingListEl.innerHTML += `
-        <div class="shopping-item remark-item">
-          <span class="text">${r}</span>
-          <input type="checkbox">
-        </div>
-      `;
-    });
-  }
+  remarks.forEach(r => {
+    shoppingListEl.innerHTML += `
+      <label class="shopping-item remark-item">
+        <span class="text">${r}</span>
+        <input type="checkbox">
+      </label>
+    `;
+  });
 });
 
 /******** ABHOLER ********/
