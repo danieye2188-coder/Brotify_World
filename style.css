@@ -40,7 +40,7 @@ body > *:not(.header-moon) {
   color: #6a3f0f;
 }
 
-/* Abholer Box */
+/* 🚗💨 Abholer Box */
 #pickupBox {
   position: fixed;
   top: 10px;
@@ -72,7 +72,7 @@ textarea {
   border: 1px solid #ccc;
 }
 
-/* Icons */
+/* 🧩 Icons */
 #iconPicker {
   display: flex;
   flex-wrap: wrap;
@@ -90,7 +90,7 @@ textarea {
   outline: 2px solid #c58b2b;
 }
 
-/* Produkte */
+/* 🥖 Produkte */
 .product {
   display: grid;
   grid-template-columns: 1fr 40px 30px 40px;
@@ -109,7 +109,7 @@ textarea {
   font-weight: bold;
 }
 
-/* Übersicht */
+/* 📋 Übersicht */
 .overview-box {
   background: rgba(255,255,255,0.95);
   padding: 10px;
@@ -131,11 +131,41 @@ textarea {
   padding: 6px;
   width: 100%;
   margin-top: 8px;
+  border-radius: 8px;
+  cursor: pointer;
 }
 
-/* Einkaufszettel */
+/* 🧾 Einkaufszettel */
 .shopping-row {
   padding: 6px;
   border-bottom: 1px dashed #ccc;
   font-size: 16px;
+}
+
+/* 🛒 BESTELLBUTTON – NEU */
+#saveBtn {
+  width: 100%;
+  margin-top: 12px;
+  padding: 16px;
+
+  font-size: 20px;
+  font-weight: bold;
+
+  background: #fff7e6;
+  border: 4px solid #c58b2b;
+  border-radius: 14px;
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* Hover */
+#saveBtn:hover {
+  background: #ffe6b8;
+  transform: scale(1.01);
+}
+
+/* Active / Click */
+#saveBtn:active {
+  transform: scale(0.99);
 }
