@@ -1,3 +1,4 @@
+/* ===== GRUNDLAYOUT ===== */
 body {
   font-family: 'Nunito', sans-serif;
   max-width: 900px;
@@ -15,7 +16,7 @@ body > *:not(.header-moon) {
   border-radius: 12px;
 }
 
-/* HEADER */
+/* ===== HEADER ===== */
 .header-moon {
   background: #f7e1b5;
   border-radius: 0 0 100% 100%;
@@ -31,11 +32,11 @@ body > *:not(.header-moon) {
   color: #7a4a12;
 }
 
-/* ICONS */
+/* ===== ICONS ===== */
 #iconPicker {
   display: flex;
-  gap: 6px;
   flex-wrap: wrap;
+  gap: 6px;
 }
 
 .icon {
@@ -48,7 +49,7 @@ body > *:not(.header-moon) {
   border-radius: 6px;
 }
 
-/* PRODUKTE */
+/* ===== PRODUKTE ===== */
 .product {
   display: grid;
   grid-template-columns: 1fr 40px 30px 40px;
@@ -65,7 +66,7 @@ body > *:not(.header-moon) {
   font-weight: bold;
 }
 
-/* BUTTON */
+/* ===== BUTTON ===== */
 #saveBtn {
   width: 100%;
   padding: 16px;
@@ -77,11 +78,15 @@ body > *:not(.header-moon) {
   cursor: pointer;
 }
 
-/* ÜBERSICHT */
+/* ===== BESTELLÜBERSICHT ===== */
+#overview {
+  display: block;
+}
+
 .overview-box {
   padding: 10px;
-  margin: 8px 0;
-  background: #fff;
+  margin: 10px 0;
+  background: #ffffff;
   border-radius: 6px;
 }
 
@@ -102,7 +107,7 @@ body > *:not(.header-moon) {
   border-radius: 6px;
 }
 
-/* ===== EINKAUFSZETTEL – ENTSCHEIDEND ===== */
+/* ===== EINKAUFSZETTEL ===== */
 .shopping-item {
   display: flex;
   align-items: center;
@@ -117,7 +122,6 @@ body > *:not(.header-moon) {
   height: 22px;
 }
 
-/* 🔥 DAS IST DER SCHLÜSSEL 🔥 */
 .shopping-item input:checked + .text {
   text-decoration: line-through;
   color: #999;
@@ -126,4 +130,18 @@ body > *:not(.header-moon) {
 .remark-item {
   background: #f0f6ff;
   border-radius: 6px;
+}
+
+/* ===== MOBILE FIX (ENTSCHEIDEND) ===== */
+@media (max-width: 600px) {
+  #overview {
+    background: rgba(255,255,255,0.97);
+    padding: 14px;
+    border-radius: 12px;
+    margin-top: 20px;
+  }
+
+  .overview-box {
+    margin-bottom: 16px;
+  }
 }
