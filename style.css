@@ -72,23 +72,28 @@ body > *:not(.header-moon) {
 }
 
 .amount {
-  text-align: center;
   font-weight: bold;
+  text-align: center;
 }
 
-/* Einkaufszettel */
-.overview-box {
-  background: rgba(255,255,255,0.95);
+/* Boxen */
+.box {
+  background: #fff;
   padding: 10px;
   border-radius: 6px;
   margin-bottom: 8px;
 }
 
-.delete-btn {
-  background: #d9534f;
+.done {
+  text-decoration: line-through;
+  opacity: 0.5;
+}
+
+button.check {
+  background: #28a745;
   color: white;
   border: none;
   padding: 6px;
   width: 100%;
-  margin-top: 8px;
+  margin-top: 6px;
 }
