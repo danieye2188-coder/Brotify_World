@@ -1,3 +1,4 @@
+/* ===== GRUNDLAYOUT ===== */
 body {
   font-family: 'Nunito', sans-serif;
   max-width: 900px;
@@ -8,6 +9,7 @@ body {
   background-position: center;
 }
 
+/* Einheitliche Container */
 body > *:not(.header-moon) {
   background: rgba(255,255,255,0.94);
   padding: 14px;
@@ -15,7 +17,7 @@ body > *:not(.header-moon) {
   border-radius: 12px;
 }
 
-/* HEADER */
+/* ===== HEADER ===== */
 .header-moon {
   background: #f7e1b5;
   text-align: center;
@@ -23,7 +25,36 @@ body > *:not(.header-moon) {
   border-radius: 0 0 100% 100%;
 }
 
-/* INPUTS */
+.header-moon h1 {
+  font-family: 'Pacifico', cursive;
+  font-size: 52px;
+  margin: 0;
+}
+
+.header-moon p {
+  margin-top: 6px;
+}
+
+/* ===== ABHOLER ===== */
+#pickupBox {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  gap: 4px;
+  background: white;
+  padding: 6px;
+  border-radius: 10px;
+  z-index: 999;
+}
+
+.pickup-under {
+  margin-top: 6px;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+/* ===== INPUTS ===== */
 input,
 textarea {
   width: 100%;
@@ -31,13 +62,34 @@ textarea {
   padding: 10px;
   border-radius: 8px;
   border: 1px solid #ccc;
+  font-family: inherit;
+  font-size: 16px;
 }
 
 #remark {
   min-height: 90px;
+  resize: vertical;
 }
 
-/* PRODUKTE */
+/* ===== ICON PICKER ===== */
+#iconPicker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.icon {
+  font-size: 26px;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.icon.selected {
+  outline: 2px solid #c58b2b;
+  border-radius: 6px;
+}
+
+/* ===== PRODUKTE ===== */
 .product {
   display: grid;
   grid-template-columns: 1fr 40px 30px 40px;
@@ -56,7 +108,7 @@ textarea {
   font-weight: bold;
 }
 
-/* BUTTON */
+/* ===== HAUPTBUTTON ===== */
 #saveBtn {
   width: 100%;
   padding: 16px;
@@ -65,9 +117,10 @@ textarea {
   background: #fff7e6;
   border: 4px solid #c58b2b;
   border-radius: 14px;
+  cursor: pointer;
 }
 
-/* BESTELLUNGEN */
+/* ===== BESTELLÜBERSICHT ===== */
 .overview-box {
   background: rgba(255,255,255,0.95);
   padding: 10px;
@@ -90,27 +143,31 @@ textarea {
   border: none;
   padding: 6px;
   border-radius: 6px;
-}
-
-/* 🧾 EINKAUFSZETTEL – SAUBER + DURCHSTREICHEN */
-.shopping-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 6px 0;
-  border-bottom: 1px dashed #ccc;
   cursor: pointer;
 }
 
+/* ===== EINKAUFSZETTEL (SAUBERE LISTE) ===== */
+.shopping-row {
+  display: grid;
+  grid-template-columns: 1fr 28px; /* Text | Checkbox */
+  align-items: center;
+  column-gap: 12px;
+
+  padding: 8px 0;
+  border-bottom: 1px dashed #ccc;
+}
+
 .shopping-row .text {
-  flex: 1;
+  line-height: 1.4;
 }
 
+/* Checkbox immer rechts */
 .shopping-row input {
-  margin-left: 12px;
+  justify-self: end;
 }
 
-.shopping-row input:checked + .text {
+/* Durchstreichen beim Abhaken */
+.shopping-row input:checked ~ .text {
   text-decoration: line-through;
   color: #999;
 }
