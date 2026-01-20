@@ -9,7 +9,7 @@ body {
   background-position: center;
 }
 
-/* Standard-Card-Style */
+/* STANDARD CONTAINER (ALLES WIRD WEISS) */
 body > *:not(.header-moon) {
   background: rgba(255,255,255,0.94);
   padding: 14px;
@@ -18,36 +18,24 @@ body > *:not(.header-moon) {
 }
 
 /* ================================================= */
-/* 🍊 TRENNUNGSBEREICHE – KORREKT & OHNE BUTTON-LOOK */
+/* 🍊 ORANGENSAFT-GELBE TRENN-CONTAINER (HIER IST DER FIX) */
 /* ================================================= */
 
-/* Überschriften + Container aus Card-Optik entfernen */
+/* GANZE BLÖCKE RICHTIG EINFÄRBEN */
 h2,
 #overview,
 #shoppingList {
-  background: transparent;
-  padding: 0;
-  margin: 0;
-  border-radius: 0;
-}
-
-/* Gelbe Trennfläche NUR für Überschriften */
-h2 {
-  margin: 24px 0 12px;
-  padding: 10px;
-  text-align: center;
-
   background: linear-gradient(
-    90deg,
-    #ffe8a3,
-    #f9c74f,
-    #ffe8a3
-  );
+    180deg,
+    #fff1b8,
+    #f9c74f
+  ) !important;
 
-  border-radius: 10px;
+  padding: 14px !important;
+  border-radius: 12px !important;
 }
 
-/* Inhalte wieder sauber absetzen */
+/* Abstand zwischen den Blöcken */
 #overview,
 #shoppingList {
   margin-bottom: 24px;
@@ -119,7 +107,7 @@ h2 {
 .overview-box {
   padding: 10px;
   margin: 10px 0;
-  background: #ffffff;
+  background: rgba(255,255,255,0.95);
   border-radius: 6px;
 }
 
