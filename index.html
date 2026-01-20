@@ -10,22 +10,29 @@
 </head>
 <body>
 
-<!-- 🚗💨 ABHOLER + ZEIT -->
+<!-- 🚗💨 Abholer + Zeit -->
 <div id="pickupBox">
   <span id="pickupLabel">🚗💨</span>
-  <input id="pickupInput" placeholder="Abholer Name">
+  <input id="pickupInput" placeholder="Abholer">
   <input type="datetime-local" id="pickupTime">
   <button id="savePickup">✔</button>
   <button id="clearPickup">✖</button>
 </div>
 
-<!-- 🌙 HEADER -->
+<!-- 🌙 Header -->
 <div class="header-moon">
   <h1>Brotify</h1>
   <p id="groupTitle">Gemeinsames Frühstück</p>
 </div>
 
-<!-- ⏳ COUNTDOWN -->
+<!-- 🔗 Einladung -->
+<div id="inviteBox">
+  <b>🔗 Einladung</b>
+  <input id="inviteLink" readonly>
+  <button id="copyInvite">📋 Kopieren</button>
+</div>
+
+<!-- ⏳ Countdown -->
 <div id="countdown">⏳ Keine Abholzeit gesetzt</div>
 
 <input id="family" placeholder="Haushaltsname">
