@@ -5,85 +5,70 @@ body {
   padding: 16px;
   background-image: url("background.jpg");
   background-size: cover;
-  background-position: center;
   background-attachment: fixed;
 }
 
 body > *:not(.header-moon) {
-  background: rgba(255,255,255,0.94);
+  background: rgba(255,255,255,0.95);
   padding: 14px;
   margin-bottom: 14px;
   border-radius: 12px;
 }
 
-/* 🌙 HEADER */
+/* Header */
 .header-moon {
   background: #f7e1b5;
   border-radius: 0 0 100% 100%;
   text-align: center;
   padding: 30px 20px 40px;
-  margin-bottom: 20px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
 }
 
 .header-moon h1 {
   font-family: 'Pacifico', cursive;
-  font-size: 52px;
+  font-size: 48px;
   margin: 0;
-  color: #7a4a12;
 }
 
-.header-moon p {
-  font-family: 'Pacifico', cursive;
-  font-size: 22px;
-  margin: 8px 0 0;
-  color: #6a3f0f;
-}
-
-/* Abholer Box */
+/* Abholer */
 #pickupBox {
   position: fixed;
   top: 10px;
   right: 10px;
   display: flex;
   gap: 4px;
-  align-items: center;
   background: white;
   padding: 6px;
   border-radius: 10px;
   z-index: 999;
 }
 
-/* Abholer unter Name */
-.pickup-under {
-  margin-top: 6px;
-  font-size: 14px;
-  font-weight: bold;
+#pickupBox input {
+  width: 120px;
 }
 
-/* Inputs */
-input,
-textarea {
+/* Einladung */
+#inviteBox input {
   width: 100%;
-  box-sizing: border-box;
-  font-family: inherit;
-  padding: 8px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
+  margin-top: 6px;
+}
+
+/* Countdown */
+#countdown {
+  text-align: center;
+  font-weight: bold;
+  background: #fff3cd;
 }
 
 /* Icons */
 #iconPicker {
   display: flex;
-  flex-wrap: wrap;
   gap: 6px;
+  flex-wrap: wrap;
 }
 
 .icon {
   font-size: 26px;
   cursor: pointer;
-  padding: 4px;
-  border-radius: 6px;
 }
 
 .icon.selected {
@@ -94,79 +79,23 @@ textarea {
 .product {
   display: grid;
   grid-template-columns: 1fr 40px 30px 40px;
-  align-items: center;
   gap: 8px;
+  align-items: center;
 }
 
 .pm {
-  width: 40px;
-  height: 40px;
   font-size: 20px;
-}
-
-.amount {
-  text-align: center;
-  font-weight: bold;
 }
 
 /* Übersicht */
 .overview-box {
-  background: rgba(255,255,255,0.95);
+  background: #fff;
   padding: 10px;
-  margin: 8px 0;
-  border-radius: 6px;
-}
-
-.pickup-info {
-  margin: 6px 0;
-  background: #fff3cd;
-  padding: 4px 6px;
-  border-radius: 6px;
-}
-
-.remark {
-  margin: 6px 0;
-  background: #e8f0fe;
-  padding: 4px 6px;
-  border-radius: 6px;
-}
-
-.delete-btn {
-  background: #d9534f;
-  color: white;
-  border: none;
-  padding: 6px;
-  width: 100%;
-  margin-top: 8px;
-}
-
-/* Einkaufszettel */
-.shopping-row {
-  padding: 6px;
-  border-bottom: 1px dashed #ccc;
-  font-size: 16px;
-}
-#countdown {
-  text-align: center;
-  font-weight: bold;
-  font-size: 18px;
-  margin-bottom: 12px;
-  padding: 10px;
-  background: #fff3cd;
-  border-radius: 10px;
-}
-
-#closeRound {
-  background: #555;
-  color: white;
-  border: none;
-  padding: 10px;
-  width: 100%;
-  margin-top: 10px;
   border-radius: 8px;
+  margin-bottom: 8px;
 }
 
+/* Archiv */
 #archive .overview-box {
-  opacity: 0.75;
-  background: #f1f1f1;
+  opacity: 0.7;
 }
