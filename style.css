@@ -9,7 +9,7 @@ body {
 }
 
 body > *:not(.header-moon) {
-  background: rgba(255,255,255,0.95);
+  background: rgba(255,255,255,0.94);
   padding: 14px;
   margin-bottom: 14px;
   border-radius: 12px;
@@ -42,23 +42,6 @@ body > *:not(.header-moon) {
   z-index: 999;
 }
 
-#pickupBox input {
-  width: 130px;
-}
-
-/* Einladung */
-#inviteBox input {
-  width: 100%;
-  margin-top: 6px;
-}
-
-/* Countdown */
-#countdown {
-  text-align: center;
-  font-weight: bold;
-  background: #fff3cd;
-}
-
 /* Icons */
 #iconPicker {
   display: flex;
@@ -69,6 +52,7 @@ body > *:not(.header-moon) {
 .icon {
   font-size: 26px;
   cursor: pointer;
+  padding: 4px;
 }
 
 .icon.selected {
@@ -87,15 +71,24 @@ body > *:not(.header-moon) {
   font-size: 20px;
 }
 
-/* Übersicht */
+.amount {
+  text-align: center;
+  font-weight: bold;
+}
+
+/* Einkaufszettel */
 .overview-box {
-  background: #fff;
+  background: rgba(255,255,255,0.95);
   padding: 10px;
-  border-radius: 8px;
+  border-radius: 6px;
   margin-bottom: 8px;
 }
 
-/* Archiv */
-#archive .overview-box {
-  opacity: 0.7;
+.delete-btn {
+  background: #d9534f;
+  color: white;
+  border: none;
+  padding: 6px;
+  width: 100%;
+  margin-top: 8px;
 }
