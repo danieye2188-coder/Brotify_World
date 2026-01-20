@@ -9,7 +9,6 @@ body {
   background-position: center;
 }
 
-/* Standard Container */
 body > *:not(.header-moon) {
   background: rgba(255,255,255,0.94);
   padding: 14px;
@@ -17,7 +16,7 @@ body > *:not(.header-moon) {
   border-radius: 12px;
 }
 
-/* 🍊 GELBE TRENN-CONTAINER */
+/* 🍊 TRENN-CONTAINER */
 h2,
 #overview,
 #shoppingList {
@@ -35,29 +34,14 @@ h2,
   margin-bottom: 20px;
 }
 
-.header-moon h1 {
-  font-family: 'Pacifico', cursive;
-  font-size: 52px;
-  margin: 0;
-  color: #7a4a12;
-}
-
 /* ===== INPUTS ===== */
 input,
 textarea {
   width: 100%;
-  box-sizing: border-box;
   padding: 10px;
   font-family: inherit;
   border-radius: 8px;
   border: 1px solid #ccc;
-  font-size: 16px;
-}
-
-/* Bemerkungsfeld */
-#remark {
-  min-height: 90px;
-  resize: vertical;
 }
 
 /* ===== ICONS ===== */
@@ -85,16 +69,12 @@ textarea {
   align-items: center;
 }
 
-.pm {
-  font-size: 20px;
-}
-
 .amount {
-  text-align: center;
   font-weight: bold;
+  text-align: center;
 }
 
-/* ===== BUTTON ===== */
+/* ===== BESTELLBUTTON ===== */
 #saveBtn {
   width: 100%;
   padding: 16px;
@@ -121,6 +101,21 @@ textarea {
   border-radius: 6px;
 }
 
+/* 🔧 BUTTON-LEISTE RECHTS */
+.order-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+.edit-btn {
+  background: #ffe29a;
+  border: 2px solid #c58b2b;
+  padding: 6px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
 .delete-btn {
   width: 100%;
   margin-top: 8px;
@@ -138,12 +133,6 @@ textarea {
   gap: 12px;
   padding: 10px;
   border-bottom: 1px dashed #ccc;
-  cursor: pointer;
-}
-
-.shopping-item input {
-  width: 22px;
-  height: 22px;
 }
 
 .shopping-item input:checked + .text {
