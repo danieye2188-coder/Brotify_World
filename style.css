@@ -3,28 +3,24 @@ body {
   max-width: 900px;
   margin: auto;
   padding: 16px;
-  background-image: url("background.jpg");
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
+  background: #f5f5f5;
 }
 
 /* Karten-Look */
 body > *:not(.header-moon) {
-  background: rgba(255,255,255,0.94);
+  background: white;
   padding: 14px;
   margin-bottom: 14px;
   border-radius: 12px;
 }
 
-/* 🌙 HALBMOND HEADER */
+/* Header */
 .header-moon {
   background: #f7e1b5;
   border-radius: 0 0 100% 100%;
   text-align: center;
   padding: 30px 20px 40px;
   margin-bottom: 20px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
 }
 
 .header-moon h1 {
@@ -35,27 +31,45 @@ body > *:not(.header-moon) {
 }
 
 .header-moon p {
-  margin: 6px 0 0;
-  font-size: 18px;
+  margin-top: 6px;
   color: #5f3b0d;
 }
 
-/* 🚗💨 Abholer */
+/* Pickup Box */
 #pickupBox {
   position: fixed;
   top: 10px;
   right: 10px;
   display: flex;
   gap: 4px;
-  align-items: center;
   background: white;
   padding: 6px;
   border-radius: 10px;
-  z-index: 999;
+  z-index: 1000;
 }
 
 #pickupBox input {
   width: 120px;
+}
+
+/* Name + Abholer */
+.family-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+#family {
+  flex: 1;
+}
+
+.pickup-inline {
+  font-weight: bold;
+  padding: 6px 10px;
+  background: #fff3cd;
+  border-radius: 8px;
+  color: #6b4a12;
+  display: none;
 }
 
 /* Icons */
@@ -63,7 +77,6 @@ body > *:not(.header-moon) {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  margin-bottom: 10px;
 }
 
 .icon {
@@ -81,8 +94,8 @@ body > *:not(.header-moon) {
 .product {
   display: grid;
   grid-template-columns: 1fr 40px 30px 40px;
-  align-items: center;
   gap: 8px;
+  align-items: center;
   margin: 6px 0;
 }
 
@@ -97,70 +110,30 @@ body > *:not(.header-moon) {
   font-weight: bold;
 }
 
-/* Übersicht */
-.overview-box {
-  background: rgba(255,255,255,0.95);
-  padding: 10px;
-  margin: 8px 0;
-  border-radius: 6px;
-}
-
-.delete-btn {
-  background: #d9534f;
-  color: white;
-  border: none;
-  padding: 6px;
-  width: 100%;
-  margin-top: 8px;
-}
-/* 🚗💨 Abholer Fixanzeige */
-.pickup-display {
-  font-weight: bold;
-  font-size: 16px;
-  margin: 10px 0;
-  padding: 10px 14px;
-  background: #fff3cd;
-  border-radius: 12px;
-  color: #6b4a12;
-  display: none;
-}
-
-.pickup-top {
-  margin-bottom: 14px;
-}
-
-.pickup-bottom {
-  margin-top: 14px;
-}
-/* Familie + Abholer nebeneinander */
-.family-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-#family {
-  flex: 1;
-}
-
-/* Abholer neben Familienname */
-.pickup-inline {
-  font-weight: bold;
-  padding: 6px 10px;
-  background: #fff3cd;
-  border-radius: 8px;
-  color: #6b4a12;
-  white-space: nowrap;
-  display: none;
-}
-
 /* Abholer unten */
 .pickup-bottom {
   font-weight: bold;
   padding: 8px 12px;
-  margin-bottom: 10px;
   background: #fff3cd;
   border-radius: 10px;
   color: #6b4a12;
+  margin-bottom: 10px;
   display: none;
+}
+
+/* Übersicht */
+.overview-box {
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 6px;
+  background: #f9f9f9;
+}
+
+.delete-btn {
+  margin-top: 8px;
+  padding: 6px;
+  width: 100%;
+  background: #d9534f;
+  color: white;
+  border: none;
 }
