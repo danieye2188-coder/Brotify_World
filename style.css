@@ -16,6 +16,7 @@ body > *:not(.header-moon) {
   border-radius: 12px;
 }
 
+/* Header */
 .header-moon {
   background: #f7e1b5;
   border-radius: 0 0 100% 100%;
@@ -25,19 +26,7 @@ body > *:not(.header-moon) {
   box-shadow: 0 6px 20px rgba(0,0,0,0.15);
 }
 
-.header-moon h1 {
-  font-family: 'Pacifico', cursive;
-  font-size: 48px;
-  margin: 0;
-  color: #7a4a12;
-}
-
-.header-moon p {
-  margin: 6px 0 0;
-  font-size: 18px;
-  color: #5f3b0d;
-}
-
+/* Abholer Box */
 #pickupBox {
   position: fixed;
   top: 10px;
@@ -51,6 +40,25 @@ body > *:not(.header-moon) {
   z-index: 999;
 }
 
+/* Abholer unter Name */
+.pickup-under {
+  margin-top: 6px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+/* Inputs */
+input,
+textarea {
+  width: 100%;
+  box-sizing: border-box;
+  font-family: inherit;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+/* Icons */
 #iconPicker {
   display: flex;
   flex-wrap: wrap;
@@ -68,6 +76,7 @@ body > *:not(.header-moon) {
   outline: 2px solid #c58b2b;
 }
 
+/* Produkte */
 .product {
   display: grid;
   grid-template-columns: 1fr 40px 30px 40px;
@@ -86,6 +95,7 @@ body > *:not(.header-moon) {
   font-weight: bold;
 }
 
+/* Übersicht */
 .overview-box {
   background: rgba(255,255,255,0.95);
   padding: 10px;
@@ -116,6 +126,7 @@ body > *:not(.header-moon) {
   margin-top: 8px;
 }
 
+/* Einkaufszettel */
 .shopping-row {
   padding: 6px;
   border-bottom: 1px dashed #ccc;
