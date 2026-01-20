@@ -180,3 +180,19 @@ hr {
 
   border-radius: 6px;
 }
+/* 🍊 HR – echte visuelle Trennlinie OHNE weißen Kasten */
+hr {
+  all: unset;                 /* entfernt ALLE geerbten Styles */
+  display: block;
+  height: 6px;
+  margin: 24px 0;
+
+  background: linear-gradient(
+    90deg,
+    #f9c74f,
+    #f9844a,
+    #f9c74f
+  );
+
+  border-radius: 6px;
+}
