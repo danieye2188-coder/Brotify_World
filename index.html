@@ -5,15 +5,13 @@
   <title>Brotify 🍞</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <!-- Styles -->
   <link rel="stylesheet" href="style.css">
 
-  <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Nunito:wght@700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-<!-- 🚗💨 ABHOLER STEUERUNG (oben rechts, fix) -->
+<!-- 🚗💨 Abholer Steuerung -->
 <div id="pickupBox">
   <span id="pickupLabel">🚗💨</span>
   <input id="pickupInput" placeholder="Abholer Name">
@@ -21,42 +19,36 @@
   <button id="clearPickup">✖</button>
 </div>
 
-<!-- 🌙 HEADER -->
+<!-- 🌙 Header -->
 <div class="header-moon">
   <h1>Brotify</h1>
   <p>Gemeinsames Sonntagsfrühstück</p>
 </div>
 
-<!-- 👤 NAME + ABHOLER -->
+<!-- 👤 Name + Abholer -->
 <div class="family-row">
   <input id="family" placeholder="Dein Name">
   <div id="currentPickupTop" class="pickup-inline"></div>
 </div>
 
-<!-- 🧩 ICONS -->
+<!-- Icons -->
 <div id="iconPicker"></div>
 
-<!-- 🥖 PRODUKTE -->
+<!-- Produkte -->
 <div id="products"></div>
 
-<!-- 💾 SPEICHERN -->
 <button id="saveBtn">🛒 Bestellung speichern</button>
 
 <hr>
 
-<!-- 📋 BESTELLUNGEN -->
 <h2>📋 Bestellungen</h2>
-
 <div id="currentPickupBottom" class="pickup-bottom"></div>
-
 <div id="overview"></div>
 
 <!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
-<!-- App -->
 <script src="app.js"></script>
-
 </body>
 </html>
