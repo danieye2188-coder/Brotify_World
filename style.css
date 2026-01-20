@@ -113,3 +113,14 @@ body > *:not(.header-moon) {
   width: 100%;
   margin-top: 8px;
 }
+/* 🚗💨 Abholer Fixanzeige */
+.pickup-display {
+  font-weight: bold;
+  font-size: 16px;
+  margin: 8px 0;
+  padding: 8px 12px;
+  background: #fff3cd;
+  border-radius: 10px;
+  color: #6b4a12;
+  display: none;
+}
