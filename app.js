@@ -48,7 +48,6 @@ const saveBtn = document.getElementById("saveBtn");
 function renderIcons(active = selectedIcon) {
   const picker = document.getElementById("iconPicker");
   picker.innerHTML = "";
-
   ICONS.forEach(icon => {
     const span = document.createElement("span");
     span.textContent = icon;
@@ -61,7 +60,7 @@ function renderIcons(active = selectedIcon) {
   });
 }
 
-/******** PRODUKTE (🔥 FIX: pm-Klasse zurück) ********/
+/******** PRODUKTE ********/
 function renderProducts(items = {}) {
   productsEl.innerHTML = "";
   cart = {};
@@ -192,19 +191,19 @@ db.ref("orders").on("value", snap => {
 
   Object.keys(totals).forEach(item => {
     shoppingListEl.innerHTML += `
-      <div class="shopping-row">
-        <span>${totals[item]}× ${item}</span>
+      <label class="shopping-row">
         <input type="checkbox">
-      </div>
+        <span class="text">${totals[item]}× ${item}</span>
+      </label>
     `;
   });
 
   remarks.forEach(r => {
     shoppingListEl.innerHTML += `
-      <div class="shopping-row">
-        <span>${r}</span>
+      <label class="shopping-row">
         <input type="checkbox">
-      </div>
+        <span class="text">${r}</span>
+      </label>
     `;
   });
 });
