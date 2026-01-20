@@ -9,7 +9,7 @@ body {
   background-position: center;
 }
 
-/* Standard Card Look */
+/* Standard Container */
 body > *:not(.header-moon) {
   background: rgba(255,255,255,0.94);
   padding: 14px;
@@ -17,18 +17,11 @@ body > *:not(.header-moon) {
   border-radius: 12px;
 }
 
-/* ============================================= */
-/* 🍊 TRENN-CONTAINER – DESKTOP + MOBILE FIX */
-/* ============================================= */
+/* 🍊 GELBE TRENN-CONTAINER */
 h2,
 #overview,
 #shoppingList {
-  background: linear-gradient(
-    180deg,
-    #fff1b8,
-    #f9c74f
-  ) !important;
-
+  background: linear-gradient(180deg, #fff1b8, #f9c74f) !important;
   padding: 14px !important;
   border-radius: 12px !important;
 }
@@ -54,8 +47,8 @@ input,
 textarea {
   width: 100%;
   box-sizing: border-box;
-  font-family: inherit;
   padding: 10px;
+  font-family: inherit;
   border-radius: 8px;
   border: 1px solid #ccc;
   font-size: 16px;
@@ -67,7 +60,7 @@ textarea {
   resize: vertical;
 }
 
-/* ===== ICON PICKER ===== */
+/* ===== ICONS ===== */
 #iconPicker {
   display: flex;
   flex-wrap: wrap;
@@ -101,7 +94,7 @@ textarea {
   font-weight: bold;
 }
 
-/* ===== BESTELLBUTTON ===== */
+/* ===== BUTTON ===== */
 #saveBtn {
   width: 100%;
   padding: 16px;
@@ -115,9 +108,9 @@ textarea {
 
 /* ===== BESTELLÜBERSICHT ===== */
 .overview-box {
+  background: rgba(255,255,255,0.95);
   padding: 10px;
   margin: 10px 0;
-  background: rgba(255,255,255,0.95);
   border-radius: 6px;
 }
 
