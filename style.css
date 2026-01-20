@@ -1,4 +1,3 @@
-/* ===== GRUNDLAYOUT ===== */
 body {
   font-family: 'Nunito', sans-serif;
   max-width: 900px;
@@ -7,7 +6,6 @@ body {
   background-image: url("background.jpg");
   background-size: cover;
   background-position: center;
-  background-attachment: fixed;
 }
 
 body > *:not(.header-moon) {
@@ -17,14 +15,13 @@ body > *:not(.header-moon) {
   border-radius: 12px;
 }
 
-/* ===== HEADER ===== */
+/* HEADER */
 .header-moon {
   background: #f7e1b5;
   border-radius: 0 0 100% 100%;
   text-align: center;
   padding: 30px 20px 40px;
   margin-bottom: 20px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
 }
 
 .header-moon h1 {
@@ -34,73 +31,32 @@ body > *:not(.header-moon) {
   color: #7a4a12;
 }
 
-.header-moon p {
-  font-family: 'Pacifico', cursive;
-  font-size: 22px;
-  margin-top: 8px;
-  color: #6a3f0f;
-}
-
-/* ===== ABHOLER ===== */
-#pickupBox {
-  position: fixed;
-  top: 10px;
-  right: 10px;
-  display: flex;
-  gap: 4px;
-  align-items: center;
-  background: white;
-  padding: 6px;
-  border-radius: 10px;
-  z-index: 999;
-}
-
-.pickup-under {
-  margin-top: 6px;
-  font-size: 14px;
-  font-weight: bold;
-}
-
-/* ===== INPUTS ===== */
-input,
-textarea {
-  width: 100%;
-  box-sizing: border-box;
-  font-family: inherit;
-  padding: 8px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-}
-
-/* ===== ICON PICKER ===== */
+/* ICONS */
 #iconPicker {
   display: flex;
-  flex-wrap: wrap;
   gap: 6px;
+  flex-wrap: wrap;
 }
 
 .icon {
   font-size: 26px;
   cursor: pointer;
-  padding: 4px;
-  border-radius: 6px;
 }
 
 .icon.selected {
   outline: 2px solid #c58b2b;
+  border-radius: 6px;
 }
 
-/* ===== PRODUKTLISTE ===== */
+/* PRODUKTE */
 .product {
   display: grid;
   grid-template-columns: 1fr 40px 30px 40px;
-  align-items: center;
   gap: 8px;
+  align-items: center;
 }
 
 .pm {
-  width: 40px;
-  height: 40px;
   font-size: 20px;
 }
 
@@ -109,10 +65,9 @@ textarea {
   font-weight: bold;
 }
 
-/* ===== BESTELLBUTTON ===== */
+/* BUTTON */
 #saveBtn {
   width: 100%;
-  margin-top: 12px;
   padding: 16px;
   font-size: 20px;
   font-weight: bold;
@@ -120,293 +75,55 @@ textarea {
   border: 4px solid #c58b2b;
   border-radius: 14px;
   cursor: pointer;
-  transition: all 0.2s ease;
 }
 
-#saveBtn:hover {
-  background: #ffe6b8;
-  transform: scale(1.01);
-}
-
-#saveBtn:active {
-  transform: scale(0.99);
-}
-
-/* 📱 Mobile Boost */
-@media (max-width: 600px) {
-  #saveBtn {
-    padding: 20px;
-    font-size: 22px;
-    background: linear-gradient(180deg, #ffdd9a, #f9c74f);
-    border-color: #e09f1f;
-    border-radius: 18px;
-    box-shadow: 0 6px 14px rgba(0,0,0,0.2);
-  }
-}
-
-/* ===== ÜBERSICHT ===== */
+/* ÜBERSICHT */
 .overview-box {
-  background: rgba(255,255,255,0.95);
   padding: 10px;
   margin: 8px 0;
+  background: #fff;
   border-radius: 6px;
 }
 
 .remark {
-  margin: 6px 0;
   background: #e8f0fe;
   padding: 4px 6px;
+  margin-top: 6px;
   border-radius: 6px;
 }
 
 .delete-btn {
+  width: 100%;
+  margin-top: 8px;
   background: #d9534f;
   color: white;
   border: none;
   padding: 6px;
-  width: 100%;
-  margin-top: 8px;
-  border-radius: 8px;
-  cursor: pointer;
+  border-radius: 6px;
 }
 
-/* ===== EINKAUFSZETTEL ===== */
+/* ===== EINKAUFSZETTEL – ENTSCHEIDEND ===== */
 .shopping-item {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-
-  padding: 10px 6px;
-  margin-bottom: 6px;
-
+  gap: 12px;
+  padding: 10px;
   border-bottom: 1px dashed #ccc;
-  font-size: 16px;
   cursor: pointer;
 }
 
-.shopping-item .text {
-  flex: 1;
+.shopping-item input {
+  width: 22px;
+  height: 22px;
 }
 
-/* Durchstreichen beim Abhaken */
-.shopping-item input[type="checkbox"]:checked ~ .text {
+/* 🔥 DAS IST DER SCHLÜSSEL 🔥 */
+.shopping-item input:checked + .text {
   text-decoration: line-through;
   color: #999;
 }
 
-/* Checkbox */
-.shopping-item input[type="checkbox"] {
-  width: 22px;
-  height: 22px;
-  cursor: pointer;
-}
-
-/* Bemerkungen optisch abheben */
 .remark-item {
   background: #f0f6ff;
   border-radius: 6px;
-  padding: 10px;
 }
-
-/* ===== TRENNLINIEN KOMPLETT ENTFERNT ===== */
-hr {
-  display: none;
-}
-/******** FIREBASE ********/
-var firebaseConfig = {
-  apiKey: "AIzaSyA8dGj6T1E3PkO3YBu3OdpW_ZjCg00dncU",
-  authDomain: "brotifyneu.firebaseapp.com",
-  databaseURL: "https://brotifyneu-default-rtdb.firebaseio.com",
-  projectId: "brotifyneu"
-};
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
-
-/******** STATE ********/
-let cart = {};
-let selectedIcon = "🦊";
-let editOrderId = null;
-
-/******** CONSTANTS ********/
-const ICONS = ["🦊","🐻","🦄","🍄","👻","🐸","🐼","🐱","🐶","🦉","🐯","🐷","🐮","🐰","🐵"];
-
-const PRODUCTS = {
-  "Weckle & Brötchen": [
-    "Laugenweckle","Körnerweckle","Doppelweckle","Seelen",
-    "Sonnenblumeweckle","Kürbisweckle","Dinkelweckle",
-    "Vollkornweckle","Mehrkornweckle","Roggenweckle"
-  ],
-  "Laugengebäck & Laugenecken": [
-    "Laugenstange","Laugenhörnchen",
-    "Laugenecke klassisch","Laugenecke mit Körnern","Brezel"
-  ],
-  "Croissants & süßes Gebäck": [
-    "Buttercroissant","Schokocroissant"
-  ],
-  "Brote & Zopf": [
-    "Zopf","Kleines Landbrot"
-  ]
-};
-
-/******** DOM ********/
-const productsEl = document.getElementById("products");
-const overviewEl = document.getElementById("overview");
-const shoppingListEl = document.getElementById("shoppingList");
-const nameInput = document.getElementById("family");
-const remarkInput = document.getElementById("remark");
-const pickupInline = document.getElementById("pickupInline");
-const pickupInput = document.getElementById("pickupInput");
-const saveBtn = document.getElementById("saveBtn");
-
-/******** ICON PICKER ********/
-function renderIcons(active = selectedIcon) {
-  const picker = document.getElementById("iconPicker");
-  picker.innerHTML = "";
-
-  ICONS.forEach(icon => {
-    const s = document.createElement("span");
-    s.textContent = icon;
-    s.className = "icon" + (icon === active ? " selected" : "");
-    s.onclick = () => {
-      selectedIcon = icon;
-      renderIcons(icon);
-    };
-    picker.appendChild(s);
-  });
-}
-
-/******** PRODUKTE ********/
-function renderProducts(items = {}) {
-  productsEl.innerHTML = "";
-  cart = {};
-
-  for (let cat in PRODUCTS) {
-    const h = document.createElement("h3");
-    h.textContent = cat;
-    productsEl.appendChild(h);
-
-    PRODUCTS[cat].forEach(p => {
-      cart[p] = items[p] || 0;
-
-      const row = document.createElement("div");
-      row.className = "product";
-
-      const name = document.createElement("div");
-      name.textContent = p;
-
-      const minus = document.createElement("button");
-      minus.textContent = "−";
-      minus.className = "pm";
-
-      const amt = document.createElement("div");
-      amt.className = "amount";
-      amt.textContent = cart[p];
-
-      const plus = document.createElement("button");
-      plus.textContent = "+";
-      plus.className = "pm";
-
-      minus.onclick = () => {
-        if (cart[p] > 0) amt.textContent = --cart[p];
-      };
-      plus.onclick = () => {
-        amt.textContent = ++cart[p];
-      };
-
-      row.append(name, minus, amt, plus);
-      productsEl.appendChild(row);
-    });
-  }
-}
-
-/******** SPEICHERN ********/
-saveBtn.onclick = () => {
-  const name = nameInput.value.trim();
-  if (!name) return alert("Bitte Namen eingeben");
-
-  const data = {
-    name,
-    icon: selectedIcon,
-    remark: remarkInput.value.trim(),
-    items: JSON.parse(JSON.stringify(cart)),
-    time: Date.now()
-  };
-
-  editOrderId
-    ? db.ref("orders/" + editOrderId).set(data)
-    : db.ref("orders").push(data);
-
-  resetForm();
-};
-
-function resetForm() {
-  editOrderId = null;
-  nameInput.value = "";
-  remarkInput.value = "";
-  selectedIcon = ICONS[0];
-  renderIcons();
-  renderProducts();
-}
-
-/******** LIVE VIEW ********/
-db.ref("orders").on("value", snap => {
-  overviewEl.innerHTML = "";
-  shoppingListEl.innerHTML = "";
-
-  const totals = {};
-  const remarks = [];
-
-  snap.forEach(c => {
-    const d = c.val();
-
-    const box = document.createElement("div");
-    box.className = "overview-box";
-    box.innerHTML = `${d.icon} <b>${d.name}</b>
-      ${d.remark ? `<div class="remark">📝 ${d.remark}</div>` : ""}`;
-
-    for (let i in d.items) {
-      if (d.items[i] > 0) {
-        totals[i] = (totals[i] || 0) + d.items[i];
-        box.innerHTML += `<br>${i}: ${d.items[i]}×`;
-      }
-    }
-
-    if (d.remark) remarks.push(`📝 ${d.name}: ${d.remark}`);
-
-    const del = document.createElement("button");
-    del.className = "delete-btn";
-    del.textContent = "❌ Löschen";
-    del.onclick = () => db.ref("orders/" + c.key).remove();
-
-    box.appendChild(del);
-    overviewEl.appendChild(box);
-  });
-
-  Object.keys(totals).forEach(i => {
-    shoppingListEl.innerHTML += `
-      <label class="shopping-item">
-        <input type="checkbox">
-        <span>${totals[i]}× ${i}</span>
-      </label>`;
-  });
-
-  remarks.forEach(r => {
-    shoppingListEl.innerHTML += `
-      <label class="shopping-item remark-item">
-        <input type="checkbox">
-        <span>${r}</span>
-      </label>`;
-  });
-});
-
-/******** ABHOLER ********/
-db.ref("meta/abholer").on("value", s => {
-  pickupInline.textContent = s.val()
-    ? `🚗💨 Abholer: ${s.val()}`
-    : "🚗💨 kein Abholer";
-});
-
-/******** START ********/
-renderIcons();
-renderProducts();
