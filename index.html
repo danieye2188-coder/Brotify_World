@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <title>Brotify 🍞</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
   <link rel="stylesheet" href="style.css">
 
+  <!-- schöne Schrift -->
   <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Nunito:wght@700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-<!-- 🚗💨 Abholer Steuerung -->
+<!-- 🚗💨 ABHOLER -->
 <div id="pickupBox">
   <span id="pickupLabel">🚗💨</span>
   <input id="pickupInput" placeholder="Abholer Name">
@@ -19,22 +19,16 @@
   <button id="clearPickup">✖</button>
 </div>
 
-<!-- 🌙 Header -->
+<!-- 🌙 HALBMOND HEADER -->
 <div class="header-moon">
   <h1>Brotify</h1>
   <p>Gemeinsames Sonntagsfrühstück</p>
 </div>
 
-<!-- 👤 Name + Abholer -->
-<div class="family-row">
-  <input id="family" placeholder="Dein Name">
-  <div id="currentPickupTop" class="pickup-inline"></div>
-</div>
+<input id="family" placeholder="Familienname">
 
-<!-- Icons -->
 <div id="iconPicker"></div>
 
-<!-- Produkte -->
 <div id="products"></div>
 
 <button id="saveBtn">🛒 Bestellung speichern</button>
@@ -42,7 +36,6 @@
 <hr>
 
 <h2>📋 Bestellungen</h2>
-<div id="currentPickupBottom" class="pickup-bottom"></div>
 <div id="overview"></div>
 
 <!-- Firebase -->
