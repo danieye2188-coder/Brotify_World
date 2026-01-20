@@ -114,7 +114,7 @@ function renderProducts(items = {}) {
   }
 }
 
-/******** SPEICHERN ********/
+/******** SPEICHERN / UPDATE ********/
 saveBtn.onclick = () => {
   const name = nameInput.value.trim();
   if (!name) return alert("Bitte deinen Namen eingeben");
@@ -138,6 +138,7 @@ saveBtn.onclick = () => {
 
 function resetForm() {
   editOrderId = null;
+  saveBtn.textContent = "🛒 Bestellung speichern";
   nameInput.value = "";
   remarkInput.value = "";
   selectedIcon = ICONS[0];
@@ -145,7 +146,7 @@ function resetForm() {
   renderProducts();
 }
 
-/******** LIVE + EINKAUFSZETTEL ********/
+/******** LIVE ÜBERSICHT + EINKAUFSZETTEL ********/
 db.ref("orders").on("value", snap => {
   overviewEl.innerHTML = "";
   shoppingListEl.innerHTML = "";
@@ -156,15 +157,53 @@ db.ref("orders").on("value", snap => {
   snap.forEach(c => {
     const d = c.val();
 
+    /* ===== BESTELLÜBERSICHT ===== */
+    const box = document.createElement("div");
+    box.className = "overview-box";
+
+    box.innerHTML = `
+      ${d.icon} <b>${d.name}</b>
+      ${d.remark ? `<div class="remark">📝 ${d.remark}</div>` : ""}
+    `;
+
     for (let i in d.items) {
       if (d.items[i] > 0) {
+        box.innerHTML += `<br>${i}: ${d.items[i]}×`;
         totalItems[i] = (totalItems[i] || 0) + d.items[i];
       }
     }
 
     if (d.remark) remarks.push(`📝 ${d.name}: ${d.remark}`);
+
+    /* Bearbeiten */
+    const editBtn = document.createElement("button");
+    editBtn.textContent = "✏️ Bearbeiten";
+    editBtn.onclick = () => {
+      editOrderId = c.key;
+      nameInput.value = d.name;
+      remarkInput.value = d.remark || "";
+      selectedIcon = d.icon;
+      renderIcons(d.icon);
+      renderProducts(d.items);
+      saveBtn.textContent = "✏️ Bestellung aktualisieren";
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    };
+
+    /* Löschen */
+    const delBtn = document.createElement("button");
+    delBtn.textContent = "❌ Bestellung löschen";
+    delBtn.className = "delete-btn";
+    delBtn.onclick = () => {
+      if (confirm("Bestellung wirklich löschen?")) {
+        db.ref("orders/" + c.key).remove();
+      }
+    };
+
+    box.append(editBtn, delBtn);
+    overviewEl.appendChild(box);
   });
 
+  /* ===== EINKAUFSZETTEL ===== */
   for (let item in totalItems) {
     shoppingListEl.innerHTML += `
       <label class="shopping-item">
