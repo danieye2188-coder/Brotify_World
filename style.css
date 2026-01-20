@@ -9,12 +9,28 @@ body {
   background-position: center;
 }
 
-/* Standard-Container */
+/* Standard Card Look */
 body > *:not(.header-moon) {
   background: rgba(255,255,255,0.94);
   padding: 14px;
   margin-bottom: 14px;
   border-radius: 12px;
+}
+
+/* ============================================= */
+/* 🍊 TRENN-CONTAINER – DESKTOP + MOBILE FIX */
+/* ============================================= */
+h2,
+#overview,
+#shoppingList {
+  background: linear-gradient(
+    180deg,
+    #fff1b8,
+    #f9c74f
+  ) !important;
+
+  padding: 14px !important;
+  border-radius: 12px !important;
 }
 
 /* ===== HEADER ===== */
@@ -33,7 +49,7 @@ body > *:not(.header-moon) {
   color: #7a4a12;
 }
 
-/* ===== INPUTS (GLOBAL) ===== */
+/* ===== INPUTS ===== */
 input,
 textarea {
   width: 100%;
@@ -45,11 +61,10 @@ textarea {
   font-size: 16px;
 }
 
-/* ===== BEMERKUNGSFELD – WICHTIGER FIX ===== */
+/* Bemerkungsfeld */
 #remark {
-  width: 100%;
-  min-height: 90px;      /* 👈 wieder deutlich größer */
-  resize: vertical;     /* Nutzer darf es vergrößern */
+  min-height: 90px;
+  resize: vertical;
 }
 
 /* ===== ICON PICKER ===== */
@@ -146,11 +161,4 @@ textarea {
 .remark-item {
   background: #f0f6ff;
   border-radius: 6px;
-}
-
-/* ===== MOBILE FEINSCHLIFF ===== */
-@media (max-width: 600px) {
-  #remark {
-    min-height: 110px;   /* 👈 auf Handy noch angenehmer */
-  }
 }
