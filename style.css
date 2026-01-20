@@ -132,16 +132,35 @@ body > *:not(.header-moon) {
   border-radius: 6px;
 }
 
-/* ===== MOBILE FIX (ENTSCHEIDEND) ===== */
-@media (max-width: 600px) {
-  #overview {
-    background: rgba(255,255,255,0.97);
-    padding: 14px;
-    border-radius: 12px;
-    margin-top: 20px;
-  }
+/* ================================================= */
+/* 🍊 ORANGENSAFT-GELBE TRENNFLÄCHEN (FINAL FIX) */
+/* ================================================= */
 
-  .overview-box {
-    margin-bottom: 16px;
+/* betrifft NUR die Überschriften-Blöcke */
+h2 {
+  background: linear-gradient(
+    90deg,
+    #ffe29a,
+    #f9c74f,
+    #ffe29a
+  );
+  padding: 12px;
+  margin: 20px 0 10px;
+  border-radius: 10px;
+  color: #7a4a12;
+  text-align: center;
+  box-shadow: inset 0 0 0 2px rgba(0,0,0,0.05);
+}
+
+/* verhindert Button-Gefühl */
+h2 {
+  cursor: default;
+}
+
+/* ===== MOBILE FEINSCHLIFF ===== */
+@media (max-width: 600px) {
+  h2 {
+    padding: 14px;
+    font-size: 20px;
   }
 }
