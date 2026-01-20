@@ -160,10 +160,25 @@ db.ref("orders").on("value", snap => {
 const pickupInput = document.getElementById("pickupInput");
 const pickupLabel = document.getElementById("pickupLabel");
 
+const pickupTop = document.getElementById("currentPickupTop");
+const pickupBottom = document.getElementById("currentPickupBottom");
+
 db.ref("meta/abholer").on("value", snap => {
   const name = snap.val();
+
   pickupLabel.textContent = name ? `🚗💨 ${name}` : "🚗💨";
   pickupInput.style.display = name ? "none" : "inline-block";
+
+  if (name) {
+    const text = `🚗💨 Abholer: ${name}`;
+    pickupTop.textContent = text;
+    pickupBottom.textContent = text;
+    pickupTop.style.display = "block";
+    pickupBottom.style.display = "block";
+  } else {
+    pickupTop.style.display = "none";
+    pickupBottom.style.display = "none";
+  }
 });
 
 document.getElementById("savePickup").onclick = () => {
