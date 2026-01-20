@@ -5,8 +5,6 @@
   <title>Brotify 🍞</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="style.css">
-
-  <!-- schöne Schrift -->
   <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Nunito:wght@700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -19,7 +17,7 @@
   <button id="clearPickup">✖</button>
 </div>
 
-<!-- 🌙 HALBMOND HEADER -->
+<!-- 🌙 HEADER -->
 <div class="header-moon">
   <h1>Brotify</h1>
   <p>Gemeinsames Sonntagsfrühstück</p>
@@ -28,27 +26,23 @@
 <input id="family" placeholder="Dein Name">
 <span id="pickupInline" style="margin-left:10px;font-weight:bold;">🚗💨</span>
 
-<textarea id="remark" placeholder="Bemerkung (z.B. 3 Eier, Sonderwunsch)" rows="2"
-style="width:100%; margin-top:8px;"></textarea>
+<textarea id="remark" placeholder="Bemerkung (z.B. 3 Eier)" rows="2"></textarea>
 
 <div id="iconPicker"></div>
-
 <div id="products"></div>
 
 <button id="saveBtn">🛒 Bestellung speichern</button>
 
 <hr>
-
 <h2>📋 Bestellungen</h2>
 <div id="overview"></div>
 
-<!-- Firebase -->
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-
-<script src="app.js"></script>
-  <hr>
+<hr>
 <h2>🧾 Einkaufszettel</h2>
 <div id="shoppingList"></div>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+<script src="app.js"></script>
 </body>
 </html>
