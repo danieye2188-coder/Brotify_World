@@ -140,7 +140,7 @@ function resetForm() {
   renderProducts();
 }
 
-/******** LIVE + EINKAUFSZETTEL ********/
+/******** LIVE: BESTELLUNGEN + EINKAUFSZETTEL ********/
 db.ref("orders").on("value", snap => {
   overviewEl.innerHTML = "";
   shoppingListEl.innerHTML = "";
@@ -180,7 +180,6 @@ db.ref("orders").on("value", snap => {
     overviewEl.appendChild(box);
   });
 
-  /* Einkaufszettel */
   Object.keys(totals).forEach(item => {
     shoppingListEl.innerHTML += `
       <label class="shopping-item">
@@ -200,10 +199,11 @@ db.ref("orders").on("value", snap => {
   });
 });
 
-/******** ABHOLER – FINAL & FUNKTIONIERT ********/
+/******** ABHOLER ********/
 db.ref("meta/abholer").on("value", snap => {
-  pickupInline.textContent = snap.val()
-    ? `🚗💨 Abholer: ${snap.val()}`
+  const val = snap.val();
+  pickupInline.textContent = val
+    ? `🚗💨 Abholer: ${val}`
     : "🚗💨 kein Abholer";
 });
 
@@ -217,6 +217,7 @@ document.getElementById("savePickup").onclick = () => {
 document.getElementById("clearPickup").onclick = () => {
   db.ref("meta/abholer").remove();
 };
+
 /******** START ********/
 renderIcons();
 renderProducts();
